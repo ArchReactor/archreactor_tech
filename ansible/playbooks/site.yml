@@ -1,0 +1,7 @@
+---
+
+- include: sensu.yml
+
+- include: webserver.yml
+
+- include: snipeit.yml

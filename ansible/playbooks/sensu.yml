@@ -1,0 +1,46 @@
+---
+
+- hosts: sensu_backend
+
+  vars:
+    pip_install_packages:
+      - name: docker
+    pip_executable: pip2
+
+  roles:
+    - { role: geerlingguy.docker, become: true }
+    - { role: geerlingguy.pip, become: true }
+
+  tasks:
+    - name: Ping test
+      ping:
+
+    - name: Create sensu network for docker
+      docker_network:
+        name: sensu
+
+    - name: Create sensu volume for docker
+      docker_volume:
+        name: sensu-backend-data
+
+    - name: Deploy sensu backend server via docker
+      docker_container:
+        image: sensu/sensu:5.17.1
+        name: sensu-backend
+        ports:
+          - "8080:8080"
+          - "8081:8081"
+          - "3000:3000"
+        volumes:
+          - "sensu-backend-data:/var/lib/sensu"
+        command: "sensu-backend start"
+
+- hosts: sensu_agent
+  
+  vars:
+    agent_config:
+      backend-url: "ws://archreactor.org:8081"
+      
+  roles:
+    - role: sensu.sensu_go.agent
+      become: yes
