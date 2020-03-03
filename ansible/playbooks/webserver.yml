@@ -1,0 +1,50 @@
+---
+
+- hosts: web_server
+
+  vars_files:
+    - ../vault/secrets.yml
+
+  tasks:
+
+    - name: Create network for Wordpress and mysql
+      docker_network:
+        name: wordpress
+
+    - name: Create volume for mysql
+      docker_volume:
+        name: mysql
+
+    - name: Create volume for wordpress
+      docker_volume:
+        name: wordpress
+
+    - name: Setup mysql for wordpress data
+      docker_container:
+        name: mysql-wordpress
+        image: mysql:5.7
+        networks:
+          - name: wordpress
+        env:
+          MYSQL_DATABASE: exampledb
+          MYSQL_USER: exampleuser
+          MYSQL_PASSWORD: "{{ WORDPRESS_MYSQL_PASSWORD }}"
+          MYSQL_RANDOM_ROOT_PASSWORD: '1'
+        volumes:
+          - "mysql:/var/lib/mysql"
+
+    - name: Install Wordpress
+      docker_container:
+        name: wordpress
+        image: wordpress
+        networks: 
+          - name: wordpress
+        env:
+          WORDPRESS_DB_HOST: mysql-wordpress
+          WORDPRESS_DB_USER: exampleuser
+          WORDPRESS_DB_PASSWORD: "{{ WORDPRESS_MYSQL_PASSWORD }}"
+          WORDPRESS_DB_NAME: exampledb
+        ports:
+          - "88:80"
+        volumes:
+          - "wordpress:/var/www/html"

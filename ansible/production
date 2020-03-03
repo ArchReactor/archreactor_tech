@@ -1,0 +1,16 @@
+
+##
+# For system monitoring
+# Sensu server at http://archreactor.org:3000
+##
+[sensu_backend]
+archreactor.org
+
+[sensu_agent]
+archreactor.org
+
+[web_server]
+archreactor.org
+
+[snipe_it_server]
+archreactor.org
