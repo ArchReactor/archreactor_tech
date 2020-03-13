@@ -14,4 +14,4 @@ ansible-galaxy install -r requirements.yml
 # Install Ansible Collectios
 ansible-galaxy collection install -r requirements.yml
 # Run playbook
-ansible-playbook -i ./production ./playbooks/site.yml -e "ansible_ssh_user=$SSH_USERNAME" --ask-vault-pass $@
+ansible-playbook -i ./production ./playbooks/site.yml -e "ansible_ssh_user=$SSH_USERNAME" --vault-password-file ~/.vault_pass.txt $@
