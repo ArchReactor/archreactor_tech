@@ -1,3 +1,9 @@
+##
+# Any server that need docker
+##
+[docker_host]
+archreactor.org
+archreactor.net
 
 ##
 # For system monitoring
@@ -8,9 +14,15 @@ archreactor.org
 
 [sensu_agent]
 archreactor.org
+archreactor.net
 
 [web_server]
 archreactor.org
 
+##
+# Physical tool and Asset management
+# http://tools.archreactor.org
+##
 [snipe_it_server]
 archreactor.org
+archreactor.net
