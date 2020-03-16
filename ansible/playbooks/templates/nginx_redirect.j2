@@ -1,0 +1,15 @@
+{% for item in nginx_redirects %}
+
+server {
+    listen 80;
+    server_name {{ item.from }};
+
+    location / {
+        proxy_pass http://{{ item.to }}/;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Host $server_name;
+    }
+}
+
+{% endfor %}
