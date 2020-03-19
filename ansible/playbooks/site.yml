@@ -9,3 +9,5 @@
 - include: webserver.yml
 
 - include: snipeit.yml
+
+- include: jenkins.yml

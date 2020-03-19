@@ -34,7 +34,7 @@
         name: snipe-it
         state: "{{ STATE }}"
 
-    - name: Create volume from snip-it mysql
+    - name: Create volume from snipe-it mysql
       docker_volume:
         name: snipe-it
         state: "{{ STATE }}"

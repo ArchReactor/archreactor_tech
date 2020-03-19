@@ -24,5 +24,12 @@ archreactor.org
 # http://tools.archreactor.org
 ##
 [snipe_it_server]
-archreactor.org
 archreactor.net
+
+##
+# Handles cron style jobs and backups
+# http://archrector.org:8080
+# http://jenkins.archreactor.net
+##
+[jenkins_server]
+archreactor.org
