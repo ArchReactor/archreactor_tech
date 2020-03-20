@@ -2,10 +2,17 @@
 
 - hosts: sensu_backend
 
+  vars_files:
+    - ../vault/secrets.yml
+
   vars:
     pip_install_packages:
       - name: docker
     pip_executable: pip2
+    
+    SENSU_URL: "http://archreactor.org:8081"
+    SENSU_USER: "admin"
+    SENSU_PASS: "{{ SENSU_SECRET_PASSWORD }}"
 
   roles:
     - { role: geerlingguy.docker, become: true }
@@ -35,11 +42,100 @@
           - "sensu-backend-data:/var/lib/sensu"
         command: "sensu-backend start"
 
+    - name: Install Slack asset
+      sensu.sensu_go.bonsai_asset:
+        name: sensu/sensu-slack-handler
+        version: 1.2.0
+  
+    - name: Setup filter to Only notify on state change
+      sensu.sensu_go.filter:
+        name: state_change_only
+        action: allow
+        expressions:
+          - event.check.occurrences == 1
+  
+    - name: Install Slack handler
+      sensu.sensu_go.pipe_handler:
+        name: slack
+        env_vars:
+          SLACK_WEBHOOK_URL: "{{ SLACK_WEBHOOK_ENDPOINT }}"
+        command: "sensu-slack-handler --channel '#alerts'"
+        filters:
+          - is_incident
+          - state_change_only
+          - not_silenced
+        runtime_assets:
+          - sensu/sensu-slack-handler
+  
+    - name: Install Disk check asset
+      sensu.sensu_go.bonsai_asset:
+        name: sensu-plugins/sensu-plugins-disk-checks
+        version: 5.0.1
+  
+    - name: Install Ruby runtime asset
+      sensu.sensu_go.bonsai_asset:
+        name: sensu/sensu-ruby-runtime
+        version: 0.0.10
+  
+    - name: Add disk check
+      sensu.sensu_go.check:
+        name: disk_check
+        command: "check-disk-usage.rb -p '(\\/var|\\/run|\\/sys|\\/snap)'"
+        subscriptions:
+          - checks
+        interval: 86400
+        runtime_assets:
+          - sensu/sensu-ruby-runtime
+          - sensu-plugins/sensu-plugins-disk-checks
+        handlers:
+          - slack
+        publish: yes
+    
+    - name: Install load check asset
+      sensu.sensu_go.bonsai_asset:
+        name: sensu-plugins/sensu-plugins-load-checks
+        version: 5.1.0
+  
+    - name: Add load check
+      sensu.sensu_go.check:
+        name: load_check
+        command: "check-load.rb"
+        subscriptions:
+          - checks
+        interval: 1200
+        runtime_assets:
+          - sensu/sensu-ruby-runtime
+          - sensu-plugins/sensu-plugins-load-checks
+        handlers:
+          - slack
+        publish: yes
+    
+    - name: Install memory check asset
+      sensu.sensu_go.bonsai_asset:
+        name: sensu-plugins/sensu-plugins-memory-checks
+        version: 4.1.1
+  
+    - name: Add memory check
+      sensu.sensu_go.check:
+        name: memory_check
+        command: "check-memory-percent.rb"
+        subscriptions:
+          - checks
+        interval: 1200
+        runtime_assets:
+          - sensu/sensu-ruby-runtime
+          - sensu-plugins/sensu-plugins-memory-checks
+        handlers:
+          - slack
+        publish: yes
+
 - hosts: sensu_agent
   
   vars:
     agent_config:
       backend-url: "ws://archreactor.org:8081"
+      subscriptions:
+        - checks
       
   roles:
     - role: sensu.sensu_go.agent

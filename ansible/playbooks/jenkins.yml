@@ -1,0 +1,29 @@
+---
+
+- hosts: jenkins_server
+
+  tasks:
+
+  - name: Create Volume for Jenkins
+    docker_volume:
+      name: jenkins_home
+
+  - name: Create rsync directory for backups
+    file:
+      name: /srv/rsync/backups
+      state: directory
+      group: docker
+      mode: 760
+    become: yes
+
+  - name: Deploy Jenkins
+    docker_container:
+      name: jenkins
+      image: 4oh4/jenkins-docker
+      ports:
+        - "8088:8080"
+      restart_policy: always
+      volumes:
+        - jenkins_home:/var/jenkins_home
+        - /etc/timezone:/etc/timezone:ro
+        - /var/run/docker.sock:/var/run/docker.sock
