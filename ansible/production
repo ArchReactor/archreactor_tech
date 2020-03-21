@@ -1,5 +1,5 @@
 ##
-# Any server that need docker
+# Any server that needs docker
 ##
 [docker_host]
 archreactor.org
@@ -33,3 +33,7 @@ archreactor.net
 ##
 [jenkins_server]
 archreactor.org
+archreactor.net
+
+[jenkins_server_proxy]
+archreactor.net
