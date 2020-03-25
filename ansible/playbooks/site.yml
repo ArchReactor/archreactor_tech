@@ -10,4 +10,6 @@
 
 - include: snipeit.yml
 
+- include: rsync.yml
+
 - include: jenkins.yml

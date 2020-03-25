@@ -37,3 +37,11 @@ archreactor.net
 
 [jenkins_server_proxy]
 archreactor.net
+
+##
+# Rsync server running on port 22022
+# Servers have access to /srv/rsync/backups
+##
+[rsync_server]
+archreactor.org
+archreactor.net

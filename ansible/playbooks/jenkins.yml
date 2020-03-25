@@ -8,14 +8,6 @@
     docker_volume:
       name: jenkins_home
 
-  - name: Create rsync directory for backups
-    file:
-      name: /srv/rsync/backups
-      state: directory
-      group: docker
-      mode: 760
-    become: yes
-
   - name: Deploy Jenkins
     docker_container:
       name: jenkins
@@ -26,7 +18,9 @@
       volumes:
         - jenkins_home:/var/jenkins_home
         - /etc/timezone:/etc/timezone:ro
-        - /var/run/docker.sock:/var/run/docker.sock
+        - /var/run/docker.sock:/var/run/docker.sock:rw
+        - /srv/rsync/backups:/srv
+      user: "1000:998"
 
 - hosts: jenkins_server_proxy
 
