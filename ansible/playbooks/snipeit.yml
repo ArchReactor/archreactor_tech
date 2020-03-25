@@ -9,14 +9,32 @@
     STATE: "present"
     CONTAINER_STATE: "started"
 
+    nginx_redirects:
+      - from: tools.archreactor.net
+        to: 127.0.0.1:3051
+      - from: tools
+        to: 127.0.0.1:3051
+  
+  roles:
+    - role: nginx
+
   tasks:
+
+    - name: Generate redirect config
+      template:
+        src: nginx_redirect.j2
+        dest: /etc/nginx/sites-enabled/tools.archreactor.net.conf
+        owner: www-data
+        group: www-data
+      notify: restart nginx
+      become: yes
 
     - name: Setup network for snipe-it and mysql
       docker_network:
         name: snipe-it
         state: "{{ STATE }}"
 
-    - name: Create volume from snip-it mysql
+    - name: Create volume from snipe-it mysql
       docker_volume:
         name: snipe-it
         state: "{{ STATE }}"

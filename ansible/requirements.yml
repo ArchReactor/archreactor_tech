@@ -9,6 +9,11 @@ roles:
     version: master
     name: geerlingguy.pip
 
+  - src: https://github.com/cchurch/ansible-role-admin-users
+
+  - src: https://www.github.com/mrlesmithjr/ansible-nginx.git
+  
+
 collections:
   
   - name: sensu.sensu_go

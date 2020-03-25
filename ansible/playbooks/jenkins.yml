@@ -1,0 +1,44 @@
+---
+
+- hosts: jenkins_server
+
+  tasks:
+
+  - name: Create Volume for Jenkins
+    docker_volume:
+      name: jenkins_home
+
+  - name: Deploy Jenkins
+    docker_container:
+      name: jenkins
+      image: 4oh4/jenkins-docker
+      ports:
+        - "8088:8080"
+      restart_policy: always
+      volumes:
+        - jenkins_home:/var/jenkins_home
+        - /etc/timezone:/etc/timezone:ro
+        - /var/run/docker.sock:/var/run/docker.sock:rw
+        - /srv/rsync/backups:/srv
+      user: "1000:998"
+
+- hosts: jenkins_server_proxy
+
+  vars:
+    nginx_redirects:
+      - from: jenkins.archreactor.net
+        to: localhost:8088
+        ssl: no
+  roles:
+    - role: nginx
+
+  tasks:
+
+    - name: Generate redirect config
+      template:
+        src: nginx_redirect.j2
+        dest: /etc/nginx/sites-enabled/jenkins.conf
+        owner: www-data
+        group: www-data
+      notify: restart nginx
+      become: yes

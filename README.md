@@ -8,6 +8,6 @@ Server setup and configuration for Archreactor (archreactor.org)
 - Ansible Vault password
 
 # Deploying
-```deploy.sh <SSH USERNAME>```
+```deploy.sh <SSH USERNAME> site.yml```
 
 Deploy script runs the Ansible playbook anisble/playbooks/site.yml using ansible/production as a list of hosts. 

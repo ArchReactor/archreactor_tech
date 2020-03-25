@@ -1,0 +1,14 @@
+pipeline {
+   agent any
+
+   stages {
+      stage('Backup Snipe-IT') {
+         steps {
+            sh '''#!/bin/bash
+            DATE=$(date +"%Y%m%d_%H%M%S")
+docker run --rm --link mysql-snipe-it:mysql mysql:5.6 sh -c 'echo "[client]\nhost=\"$MYSQL_PORT_3306_TCP_ADDR\"\nuser=root\npassword=\\"$MYSQL_ENV_MYSQL_ROOT_PASSWORD\\"" > my.cnf && cat my.cnf && exec mysqldump --defaults-file=my.cnf -alv --all-databases' | gzip > /srv/snipe-it_db_dump.sql.${DATE}.gz
+            '''
+         }
+      }
+   }
+}

@@ -1,3 +1,9 @@
+##
+# Any server that needs docker
+##
+[docker_host]
+archreactor.org
+archreactor.net
 
 ##
 # For system monitoring
@@ -8,9 +14,34 @@ archreactor.org
 
 [sensu_agent]
 archreactor.org
+archreactor.net
 
 [web_server]
 archreactor.org
 
+##
+# Physical tool and Asset management
+# http://tools.archreactor.org
+##
 [snipe_it_server]
+archreactor.net
+
+##
+# Handles cron style jobs and backups
+# http://archrector.org:8080
+# http://jenkins.archreactor.net
+##
+[jenkins_server]
 archreactor.org
+archreactor.net
+
+[jenkins_server_proxy]
+archreactor.net
+
+##
+# Rsync server running on port 22022
+# Servers have access to /srv/rsync/backups
+##
+[rsync_server]
+archreactor.org
+archreactor.net

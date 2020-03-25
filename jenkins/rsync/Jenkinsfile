@@ -1,0 +1,13 @@
+pipeline {
+   agent any
+
+   stages {
+      stage('Sync backups') {
+         steps {
+            sh '''#!/bin/bash
+            docker exec rsync_server rsync -zavh -e "ssh -p 22022" root@archreactor.org:/data/ ./
+            '''
+         }
+      }
+   }
+}

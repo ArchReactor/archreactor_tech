@@ -1,7 +1,15 @@
 ---
 
+- include: users.yml
+
+- include: docker.yml
+
 - include: sensu.yml
 
 - include: webserver.yml
 
 - include: snipeit.yml
+
+- include: rsync.yml
+
+- include: jenkins.yml
