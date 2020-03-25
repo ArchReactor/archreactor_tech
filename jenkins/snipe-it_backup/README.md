@@ -1,1 +1,0 @@
-This is not automatically added to Jenkins. You must create a Pipeline job to run the Jenkinsfile.

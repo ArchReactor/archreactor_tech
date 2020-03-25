@@ -1,0 +1,49 @@
+---
+
+- hosts: rsync_server
+
+  vars:
+    RSYNC_DIRECTORY: "/srv/rsync"
+    BACKUP_DIRECTORY: "{{ RSYNC_DIRECTORY }}/backups"
+    RSYNC_PRIVATE_KEY: "{{ lookup('file', '../vault/id_rsa_rsync') }}"
+    RSYNC_PUBLIC_KEY: "{{ lookup('file', 'id_rsa_rsync.pub') }}"
+
+  tasks:
+
+    - name: Create rsync directory for backups
+      file:
+        name: "{{ BACKUP_DIRECTORY }}"
+        state: directory
+        group: docker
+        mode: 0770
+      become: yes
+
+    - name: Copy public key to rsync folder
+      copy:
+        dest: "{{ RSYNC_DIRECTORY }}/id_rsa.pub"
+        src: id_rsa_rsync.pub
+        mode: 0400
+        group: docker
+      become: yes
+
+    - name: Copy private key to rsync folder
+      copy:
+        dest: "{{ RSYNC_DIRECTORY }}/id_rsa"
+        src: "../vault/id_rsa_rsync"
+        mode: 0440
+        group: docker
+      become: yes
+
+    - name: Start rsync server
+      docker_container:
+        name: rsync_server
+        image: eeacms/rsync
+        env:
+          SSH_AUTH_KEY: "{{ RSYNC_PUBLIC_KEY }}"
+        volumes:
+          - "{{ BACKUP_DIRECTORY }}:/data"
+          - "{{ RSYNC_DIRECTORY }}/id_rsa.pub:/root/.ssh/id_rsa.pub"
+          - "{{ RSYNC_DIRECTORY }}/id_rsa:/root/.ssh/id_rsa"
+        ports:
+          - "22022:22"
+        command: "server"
