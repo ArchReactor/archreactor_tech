@@ -1,0 +1,14 @@
+---
+
+- hosts: all
+
+  tasks:
+  - name: Install Ansible ppa
+    apt_repository:
+      repo: ppa:ansible/ansible
+    become: yes
+
+  - name: Install Ansible
+    apt:
+      name: ansible
+    become: yes

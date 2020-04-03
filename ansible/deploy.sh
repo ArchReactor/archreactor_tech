@@ -1,19 +1,36 @@
 #!/bin/bash
-if [ $# -lt 2 ]; then
-    echo "Usage: deploy.sh <SSH_USERNAME> <PLAYBOOK> <Optional Args>"
-    echo "Optional Args are appended to ansible-playbook"
-    exit 1
-fi
 
-# Save username and playbook name and remove aguments with shift
-SSH_USERNAME=$1
-shift
-PLAYBOOK=$1
-shift
+usage() {
+    echo "Usage: ${0} [-upa]"
+    echo "-u ssh username. Default is $USER"
+    echo "-p Playbook name. Default is site.yml"
+    echo "-a Optional args appended to ansible-playbook command"
+    exit 1
+}
+
+# Set variables
+SSH_USERNAME=$USER
+PLAYBOOK="site.yml"
+while getopts u:p:a: OPT
+do
+    case "$OPT" in
+    u) SSH_USERNAME="$OPTARG";;
+    p) PLAYBOOK="$OPTARG";;
+    a) ANSIBLE_ARGS="$OPTARG";;
+    *) usage
+    esac
+done
+shift $(( $OPTIND-1 ))
+
+# Check for unhandled argument
+if [[ "${#}" -ne 0 ]]
+then
+    usage
+fi
 
 # Install Ansible Roles
 ansible-galaxy install -r requirements.yml
 # Install Ansible Collectios
 ansible-galaxy collection install -r requirements.yml
 # Run playbook
-ansible-playbook -i ./production ./playbooks/$PLAYBOOK -e "ansible_ssh_user=$SSH_USERNAME" --vault-password-file ~/.vault_pass.txt $@
+ansible-playbook -i ./production ./playbooks/$PLAYBOOK -e "ansible_ssh_user=$SSH_USERNAME" $ANSIBLE_ARGS

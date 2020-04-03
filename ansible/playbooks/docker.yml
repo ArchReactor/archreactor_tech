@@ -7,6 +7,13 @@
       - name: docker
     pip_executable: pip2
 
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      become: yes
+
   roles:
     - { role: geerlingguy.docker, become: true }
     - { role: geerlingguy.pip, become: true }
