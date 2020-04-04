@@ -6,17 +6,9 @@
     - ../vault/secrets.yml
 
   vars:
-    pip_install_packages:
-      - name: docker
-    pip_executable: pip2
-    
     SENSU_URL: "http://archreactor.org:8080"
     SENSU_USER: "admin"
     SENSU_PASS: "P@ssw0rd!"
-
-  roles:
-    - { role: geerlingguy.docker, become: true }
-    - { role: geerlingguy.pip, become: true }
 
   tasks:
     - name: Ping test

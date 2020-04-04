@@ -28,5 +28,5 @@
       with_items: "{{ admin_users }}"
       become: yes
 
-    - name: reset ssh connection
+    - name: reset ssh connection to reload user groups
       meta: reset_connection

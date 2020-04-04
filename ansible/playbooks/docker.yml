@@ -17,3 +17,7 @@
   roles:
     - { role: geerlingguy.docker, become: true }
     - { role: geerlingguy.pip, become: true }
+
+  tasks:
+    - name: reset ssh connection
+      meta: reset_connection
