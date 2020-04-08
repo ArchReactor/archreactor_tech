@@ -8,7 +8,7 @@
     docker_volume:
       name: jenkins_home
 
-  - name: Deploy Jenkins
+  - name: Download and Deploy Jenkins
     docker_container:
       name: jenkins
       image: 4oh4/jenkins-docker

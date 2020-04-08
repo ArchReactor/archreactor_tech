@@ -1,0 +1,17 @@
+---
+
+- hosts: all
+
+  tasks:
+
+  - name: Copy private key to vagrant user
+    copy:
+      src: id_rsa
+      dest: /home/vagrant/.ssh/id_rsa
+      mode: 0600
+
+  - name: Add public key to authorized_keys
+    lineinfile:
+      path: /home/vagrant/.ssh/authorized_keys
+      regexp: "^{{ lookup('file', 'id_rsa.pub') }}"
+      line: "{{ lookup('file', 'id_rsa.pub') }}"

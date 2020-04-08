@@ -7,12 +7,19 @@
       - username: josh
         fullname: "Joshua Frank"
         pubkey: "https://github.com/frankjoshua.keys"
+      - username: vagrant
 
   roles:
     - role: ansible-role-admin-users
       become: yes
 
   tasks:
+
+    - name: Add docker group
+      group:
+        name: docker
+      become: yes
+
     - name: Add admin users to docker group
       user:
         name: "{{ item.username }}"
@@ -20,3 +27,6 @@
         append: yes
       with_items: "{{ admin_users }}"
       become: yes
+
+    - name: reset ssh connection to reload user groups
+      meta: reset_connection

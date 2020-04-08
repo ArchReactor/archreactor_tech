@@ -6,17 +6,9 @@
     - ../vault/secrets.yml
 
   vars:
-    pip_install_packages:
-      - name: docker
-    pip_executable: pip2
-    
-    SENSU_URL: "http://archreactor.org:8081"
+    SENSU_URL: "http://archreactor.org:8080"
     SENSU_USER: "admin"
-    SENSU_PASS: "{{ SENSU_SECRET_PASSWORD }}"
-
-  roles:
-    - { role: geerlingguy.docker, become: true }
-    - { role: geerlingguy.pip, become: true }
+    SENSU_PASS: "P@ssw0rd!"
 
   tasks:
     - name: Ping test
@@ -38,9 +30,14 @@
           - "8080:8080"
           - "8081:8081"
           - "3000:3000"
+        env:
+          SENSU_BACKEND_CLUSTER_ADMIN_USERNAME: "{{ SENSU_USER }}"
+          SENSU_BACKEND_CLUSTER_ADMIN_PASSWORD: "{{ SENSU_PASS }}"
+        networks: 
+          - name: "sensu"
         volumes:
           - "sensu-backend-data:/var/lib/sensu"
-        command: "sensu-backend start"
+        command: "sensu-backend start --log-level debug"
 
     - name: Install Slack asset
       sensu.sensu_go.bonsai_asset:
