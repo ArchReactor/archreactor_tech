@@ -7,6 +7,8 @@
       - username: josh
         fullname: "Joshua Frank"
         pubkey: "https://github.com/frankjoshua.keys"
+      - username: chrisw
+        pubkey: "https://github.com/chrwei.keys"
       - username: vagrant
 
   roles:
@@ -14,6 +16,9 @@
       become: yes
 
   tasks:
+
+    - debug:
+        msg: "{{ admin_users }}"
 
     - name: Add docker group
       group:

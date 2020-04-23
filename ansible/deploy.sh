@@ -33,4 +33,4 @@ ansible-galaxy install -r requirements.yml
 # Install Ansible Collectios
 ansible-galaxy collection install -r requirements.yml
 # Run playbook
-ansible-playbook -i ./production ./playbooks/$PLAYBOOK -e "ansible_ssh_user=$SSH_USERNAME" $ANSIBLE_ARGS
+ansible-playbook -i ./production ./playbooks/$PLAYBOOK -e \"ansible_ssh_user=$SSH_USERNAME\" $ANSIBLE_ARGS

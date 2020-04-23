@@ -1,7 +1,7 @@
 #!/bin/bash
 
 vagrant up --parallel
-vagrant ssh test-desktop -c "cd /vagrant/ansible && ./deploy.sh -a --ask-vault-pass"
+vagrant ssh test-desktop -c 'cd /vagrant/ansible && ./deploy.sh -a "--ask-vault-pass"'
 ERROR="${?}"
 echo
 echo

@@ -21,3 +21,6 @@
   tasks:
     - name: reset ssh connection
       meta: reset_connection
+
+    - name: Check that Docker is installed
+      shell: hash docker
