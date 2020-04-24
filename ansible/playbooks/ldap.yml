@@ -1,0 +1,25 @@
+---
+
+- hosts: ldap_server
+
+  tasks:
+
+    - name: Install ldap server
+      docker_container:
+        image: osixia/openldap:1.1.8
+        name: ldap-service
+        hostname: ldap-service
+        ports:
+          - "389:389"
+
+    - name: Install phpldapadmin
+      docker_container:
+        image: osixia/phpldapadmin:0.9.0
+        name: phpldapadmin-service
+        hostname: phpldapadmin-service
+        links:
+          - "ldap-service:ldap-host"
+        env:
+          PHPLDAPADMIN_LDAP_HOSTS: "ldap-host"
+        ports:
+          - "443:443"

@@ -13,3 +13,5 @@
 - include: rsync.yml
 
 - include: jenkins.yml
+
+- include: ldap.yml

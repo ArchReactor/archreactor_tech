@@ -45,3 +45,6 @@ archreactor.net
 [rsync_server]
 archreactor.org
 archreactor.net
+
+[ldap_server]
+archreactor.net
