@@ -1,3 +1,6 @@
+[all:vars]
+VAULT_FOLDER="../vault"
+
 ##
 # Any server that needs docker
 ##
@@ -47,4 +50,10 @@ archreactor.org
 archreactor.net
 
 [ldap_server]
+archreactor.net
+
+###
+# Samba Primary Domain Controller
+###
+[pdc]
 archreactor.net

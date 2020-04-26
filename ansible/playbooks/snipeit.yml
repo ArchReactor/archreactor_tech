@@ -3,7 +3,7 @@
 - hosts: snipe_it_server
 
   vars_files:
-    - ../vault/secrets.yml
+    - "{{ VAULT_FOLDER }}/secrets.yml"
 
   vars:
     STATE: "present"

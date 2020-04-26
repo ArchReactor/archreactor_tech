@@ -5,8 +5,8 @@
   vars:
     RSYNC_DIRECTORY: "/srv/rsync"
     BACKUP_DIRECTORY: "{{ RSYNC_DIRECTORY }}/backups"
-    RSYNC_PRIVATE_KEY: "{{ lookup('file', '../vault/id_rsa_rsync') }}"
-    RSYNC_PUBLIC_KEY: "{{ lookup('file', 'id_rsa_rsync.pub') }}"
+    RSYNC_PRIVATE_KEY: "{{ lookup('file', \"{{ VAULT_FOLDER }}/id_rsa_rsync\") }}"
+    RSYNC_PUBLIC_KEY: "{{ lookup('file', \"{{ VAULT_FOLDER }}/id_rsa_rsync.pub\") }}"
 
   tasks:
 
@@ -21,7 +21,7 @@
     - name: Copy public key to rsync folder
       copy:
         dest: "{{ RSYNC_DIRECTORY }}/id_rsa.pub"
-        src: id_rsa_rsync.pub
+        src: "{{ VAULT_FOLDER }}/id_rsa_rsync.pub"
         mode: 0400
         group: docker
       become: yes
@@ -29,7 +29,7 @@
     - name: Copy private key to rsync folder
       copy:
         dest: "{{ RSYNC_DIRECTORY }}/id_rsa"
-        src: "../vault/id_rsa_rsync"
+        src: "{{ VAULT_FOLDER }}/id_rsa_rsync"
         mode: 0440
         group: docker
       become: yes

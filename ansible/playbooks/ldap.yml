@@ -3,7 +3,7 @@
 - hosts: ldap_server
 
   tasks:
-
+    # From: https://github.com/osixia/docker-phpLDAPadmin
     - name: Install ldap server
       docker_container:
         image: osixia/openldap:1.1.8

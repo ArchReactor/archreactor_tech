@@ -3,7 +3,7 @@
 - hosts: sensu_backend
 
   vars_files:
-    - ../vault/secrets.yml
+    - "{{ VAULT_FOLDER }}/secrets.yml"
 
   vars:
     SENSU_URL: "http://archreactor.org:8080"

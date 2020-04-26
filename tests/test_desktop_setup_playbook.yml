@@ -12,3 +12,8 @@
     apt:
       name: ansible
     become: yes
+
+  - name: Install Desktop
+    apt: 
+      name: lubuntu-desktop
+    become: yes

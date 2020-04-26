@@ -1,0 +1,50 @@
+---
+
+- hosts: pdc
+
+  vars:
+    HOST_IP: "{{ ansible_default_ipv4.address }}"
+    DNS_IP: 1.1.1.1
+
+  tasks:
+
+    name: Install Samba as a PDC 
+    docker_container:
+      image: nowsci/samba-domain
+      container_name: samba
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - samba_data:/var/lib/samba
+        - samba_config:/etc/samba/external
+      environment:
+        - DOMAIN=archreactor.net
+        - DOMAINPASS=ThisIsMyAdminPassword
+        - "DNSFORWARDER={{ DNS_IP }}"
+        - "HOSTIP={{ HOST_IP }}"
+      ports:
+        - 53:53
+        - 53:53/udp
+        - 88:88
+        - 88:88/udp
+        - 135:135
+        - 137-138:137-138/udp
+        - 139:139
+        - 389:389
+        - 389:389/udp
+        - 445:445
+        - 464:464
+        - 464:464/udp
+        - 636:636
+        - 1024-1044:1024-1044
+        - 3268-3269:3268-3269
+      dns_search:
+        - archreactor.net
+      dns:
+        - "{{ DNS_IP }}"
+      hostname: archreactor.net
+      cap_add:
+        - NET_ADMIN
+      devices:
+        - /dev/net/tun
+      privileged: true
+      restart: always
