@@ -10,19 +10,19 @@ usage() {
     echo "-u ssh username. Default is $USER"
     echo "-p Playbook name. Default is $PLAYBOOK"
     echo "-a Optional args appended to ansible-playbook command"
-    echo "-k Replace default vault options $VAULT_PASS_LOCATION"
+    echo "-k Prompt for password instead of looking in $VAULT_PASS_LOCATION"
     echo "-s Location of Vault secrets folder"
     exit 1
 }
 
 # Set variables
-while getopts u:p:a:k:s: OPT
+while getopts u:p:a:ks: OPT
 do
     case "$OPT" in
     u) SSH_USERNAME="$OPTARG";;
     p) PLAYBOOK="$OPTARG";;
     a) ANSIBLE_ARGS="$OPTARG";;
-    k) VAULT_PASS_LOCATION="$OPTARG";;
+    k) VAULT_PASS_LOCATION="";;
     s) VAULT_SECRETS_FOLDER="--extra-vars \"VAULT_FOLDER=$OPTARG\"";;
     *) usage
     esac
@@ -40,4 +40,5 @@ ansible-galaxy install -r requirements.yml
 # Install Ansible Collectios
 ansible-galaxy collection install -r requirements.yml
 # Run playbook
-ansible-playbook -i ./production ./playbooks/$PLAYBOOK -e \"ansible_ssh_user=$SSH_USERNAME\" $VAULT_SECRETS_FOLDER $VAULT_PASS_LOCATION $ANSIBLE_ARGS
+echo ansible-playbook ./playbooks/$PLAYBOOK -e \"ansible_ssh_user=$SSH_USERNAME\" $VAULT_SECRETS_FOLDER $VAULT_PASS_LOCATION $ANSIBLE_ARGS
+eval ansible-playbook ./playbooks/$PLAYBOOK -e \"ansible_ssh_user=$SSH_USERNAME\" $VAULT_SECRETS_FOLDER $VAULT_PASS_LOCATION $ANSIBLE_ARGS

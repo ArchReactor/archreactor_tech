@@ -19,8 +19,5 @@
     - { role: geerlingguy.pip, become: true }
 
   tasks:
-    - name: reset ssh connection
+    - name: reset ssh connection to make docker available
       meta: reset_connection
-
-    - name: Check that Docker is installed
-      shell: hash docker

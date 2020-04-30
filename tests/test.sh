@@ -1,7 +1,9 @@
 #!/bin/bash
 
 vagrant up --parallel
-vagrant ssh test-desktop -c 'cd /vagrant/ansible && ./deploy.sh -k "" -s ../../tests/vault'
+testing_command="vagrant ssh test-desktop -c 'cd /vagrant/ansible && ./deploy.sh -k -s ../../tests/vault'"
+echo $testing_command
+eval $testing_command
 ERROR="${?}"
 echo
 echo

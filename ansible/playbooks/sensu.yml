@@ -38,6 +38,7 @@
         volumes:
           - "sensu-backend-data:/var/lib/sensu"
         command: "sensu-backend start --log-level debug"
+        restart_policy: "unless-stopped"
 
     - name: Install Slack asset
       sensu.sensu_go.bonsai_asset:
@@ -125,14 +126,57 @@
         handlers:
           - slack
         publish: yes
+      
+    - name: Install https://monitoring-plugins.org assets
+      sensu.sensu_go.bonsai_asset:
+        name: sensu/monitoring-plugins
+        version: 2.5.0
+
+    - name: Add Wordpress check
+      sensu.sensu_go.check:
+        name: worpress
+        command: "check_http -H archreactor.org -p 88"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
+
+    - name: Add check for Jenkins
+      sensu.sensu_go.check:
+        name: jenkins
+        command: "check_http -H jenkins.archreactor.net"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
+
+    - name: Add check for snipe-it
+      sensu.sensu_go.check:
+        name: snipe-it
+        command: "check_http -H tools.archreactor.net"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
 
 - hosts: sensu_agent
   
   vars:
     agent_config:
       backend-url: "ws://archreactor.org:8081"
-      subscriptions:
-        - checks
+      subscriptions: "{{ SENSU_CHECKS }}"
       
   roles:
     - role: sensu.sensu_go.agent
