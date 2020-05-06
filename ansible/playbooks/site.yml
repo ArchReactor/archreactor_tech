@@ -15,3 +15,5 @@
 - include: jenkins.yml
 
 - include: ldap.yml
+
+- include: keycloak.yml

@@ -57,3 +57,10 @@ archreactor.net
 ###
 [pdc]
 archreactor.net
+
+###
+# Keycloak server
+# users.archreactor.org
+###
+[keycloak_server]
+archreactor.net

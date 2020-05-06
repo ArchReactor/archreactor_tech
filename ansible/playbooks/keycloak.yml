@@ -1,0 +1,37 @@
+---
+
+- hosts: keycloak_server
+
+  vars:
+
+    KEYCLOAK_PORT: 9909
+
+    nginx_redirects:
+      - from: users.archreactor.net
+        to: "127.0.0.1:{{ KEYCLOAK_PORT }}"
+
+  roles:
+    - role: nginx
+
+  tasks:
+
+    - name: Generate redirect config
+      template:
+        src: nginx_redirect.j2
+        dest: /etc/nginx/sites-enabled/users.archreactor.net.conf
+        owner: www-data
+        group: www-data
+      notify: restart nginx
+      become: yes
+
+    - name: Install Keycloak
+      docker_container:
+        image: quay.io/keycloak/keycloak
+        name: keycloak
+        env:
+          KEYCLOAK_USER: "admin"
+          KEYCLOAK_PASSWORD: "admin"
+          DB_VENDOR: "h2"
+        ports:
+          - "{{ KEYCLOAK_PORT }}:8080"
+        restart_policy: "unless-stopped"

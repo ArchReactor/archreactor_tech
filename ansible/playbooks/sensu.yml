@@ -182,7 +182,7 @@
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: keycloak
-        command: "check_http -H sso.archreactor.net"
+        command: "check_http -H users.archreactor.net"
         subscriptions:
           - checks
         interval: 120
