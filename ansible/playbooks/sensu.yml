@@ -178,6 +178,20 @@
           - slack
         publish: yes
 
+    - name: Add check for Keycloak
+      sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
+        name: keycloak
+        command: "check_http -H sso.archreactor.net"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
+
 - hosts: sensu_agent
   
   vars:

@@ -42,3 +42,15 @@
         group: www-data
       notify: restart nginx
       become: yes
+
+    - name: Find index files to rename
+      find:
+        paths: /var/www/html
+        patterns: "index*.html"
+      register: index_files
+
+    - name: Remove default index - so error 403 will happen instead of blank page
+      command: "mv {{ item.path }} {{ item.path }}.bak"
+      with_items: "{{ index_files.files }}"
+      become: yes
+      
