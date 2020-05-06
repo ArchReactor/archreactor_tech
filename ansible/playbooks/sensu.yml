@@ -6,8 +6,6 @@
     - "{{ VAULT_FOLDER }}/secrets.yml"
 
   tasks:
-    - name: Ping test
-      ping:
 
     - name: Create sensu network for docker
       docker_network:
@@ -43,6 +41,7 @@
   
     - name: Setup filter to Only notify on state change
       sensu.sensu_go.filter:
+        auth: "{{ SENSU_AUTH }}"
         name: state_change_only
         action: allow
         expressions:
@@ -50,6 +49,7 @@
   
     - name: Install Slack handler
       sensu.sensu_go.pipe_handler:
+        auth: "{{ SENSU_AUTH }}"
         name: slack
         env_vars:
           SLACK_WEBHOOK_URL: "{{ SLACK_WEBHOOK_ENDPOINT }}"
@@ -154,7 +154,7 @@
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: jenkins
-        command: "check_http -H jenkins.archreactor.net"
+        command: "check_http -H jenkins.archreactor.net -e 403"
         subscriptions:
           - checks
         interval: 120
@@ -182,7 +182,7 @@
   
   vars:
     agent_config:
-      backend-url: "{{ SENSU_AUTH.backend-url }}"
+      backend-url: "ws://archreactor.org:8081"
       subscriptions: "{{ SENSU_CHECKS }}"
       
   roles:

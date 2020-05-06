@@ -32,6 +32,7 @@
           MYSQL_RANDOM_ROOT_PASSWORD: '1'
         volumes:
           - "mysql:/var/lib/mysql"
+        restart_policy: "unless-stopped"
 
     - name: Install Wordpress
       docker_container:
@@ -48,3 +49,4 @@
           - "88:80"
         volumes:
           - "wordpress:/var/www/html"
+        restart_policy: "unless-stopped"

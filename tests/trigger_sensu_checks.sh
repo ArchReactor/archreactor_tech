@@ -7,15 +7,21 @@ GREEN='\033[0;32m'
 # echo "Then checks the results of those checks."
 # echo "Exiting with a non zero error on failure."
 
-ACCESS_TOKEN=$(curl -u 'admin:P@ssw0rd!' http://archreactor.org:8080/auth 2> /dev/null | jq -r '.access_token' 2> /dev/null)
+SENSU_USER="admin"
+SENSU_PASSWORD="test_password"
+SENSU_URL="http://archreactor.org:8080"
+
+
+ACCESS_TOKEN=$(curl -u "$SENSU_USER:$SENSU_PASSWORD" $SENSU_URL/auth 2> /dev/null | jq -r '.access_token' 2> /dev/null)
 if [ "${?}" -ne "0" ] 
 then
-  echo "Error getting access token. Check URL, username and password."
+  echo -e "${RED}**\nError getting access token. Check URL, username and password.\n**${NO_COLOR}"
+  exit 1
 fi
 
 LIST_OF_CHECKS=$( \
 curl -H "Authorization: Bearer $ACCESS_TOKEN" \
-http://archreactor.org:8080/api/core/v2/checks \
+$SENSU_URL/api/core/v2/checks \
 2> /dev/null \
 | jq -r '.[] | .metadata.name' )
 
@@ -26,7 +32,7 @@ do
   -H "Authorization: Bearer $ACCESS_TOKEN" \
   -H 'Content-Type: application/json' \
   -d "{\"check\": \"$CHECK_NAME\"}" \
-  http://archreactor.org:8080/api/core/v2/namespaces/default/checks/$CHECK_NAME/execute &> /dev/null
+  $SENSU_URL/api/core/v2/namespaces/default/checks/$CHECK_NAME/execute &> /dev/null
 done
 
 secs=5
@@ -38,7 +44,7 @@ done
 
 CHECK_RESULTS=$( \
 curl -H "Authorization: Bearer $ACCESS_TOKEN" \
-http://archreactor.org:8080/api/core/v2/events -G \
+$SENSU_URL/api/core/v2/events -G \
 --data-urlencode 'fieldSelector=event.check.status != "0"' \
 2> /dev/null )
 
@@ -48,6 +54,8 @@ echo "$CHECK_RESULTS" \
 
 if [ "${ERROR_COUNT}" -ne 0 ]
 then
+  echo
+  echo
   echo "The following Sensu checks failed:"
   echo -e "${RED}"
   echo "$CHECK_RESULTS" | jq -r ".[] | .check.metadata.name + \": \" + .check.output"
