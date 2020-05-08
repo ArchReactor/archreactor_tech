@@ -5,7 +5,6 @@
   vars:
     pip_install_packages:
       - name: docker
-    pip_executable: pip2
 
   pre_tasks:
     - name: Update apt cache
@@ -17,7 +16,3 @@
   roles:
     - { role: geerlingguy.docker, become: true }
     - { role: geerlingguy.pip, become: true }
-
-  tasks:
-    - name: reset ssh connection to make docker available
-      meta: reset_connection

@@ -33,6 +33,11 @@
         command: "sensu-backend start --log-level debug"
         restart_policy: "unless-stopped"
 
+    - name: Wait for sensu to start
+      wait_for:
+        port: "3000"
+        timeout: 20
+
     - name: Install Slack asset
       sensu.sensu_go.bonsai_asset:
         auth: "{{ SENSU_AUTH }}"
