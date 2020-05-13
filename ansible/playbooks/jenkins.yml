@@ -8,7 +8,8 @@
     docker_volume:
       name: jenkins_home
 
-  - name: Download and Deploy Jenkins
+  # https://github.com/4OH4/jenkins-docker
+  - name: Download and Deploy Jenkins with Docker built in
     docker_container:
       name: jenkins
       image: 4oh4/jenkins-docker
@@ -29,7 +30,7 @@
       - from: jenkins.archreactor.net
         to: localhost:8088
         ssl: no
-        
+
   roles:
     - role: nginx
 

@@ -16,4 +16,6 @@
 
 - include: ldap.yml
 
+- include: pdc.yml
+
 - include: keycloak.yml

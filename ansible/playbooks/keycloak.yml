@@ -41,4 +41,4 @@
       wait_for:
         host: "{{ KEYCLOAK_HOST }}"
         port: "{{ KEYCLOAK_PORT }}"
-        timeout: 15
+        timeout: 8
