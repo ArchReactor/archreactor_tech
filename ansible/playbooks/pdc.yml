@@ -3,7 +3,7 @@
 - hosts: pdc
 
   vars:
-    HOST_IP: 10.20.1.3
+    HOST_IP: "{{ ansible_default_ipv4.address }}"
     DNS_IP: 1.1.1.1
 
   tasks:
@@ -22,9 +22,11 @@
           DNSFORWARDER: "{{ DNS_IP }}"
           HOSTIP: "{{ HOST_IP }}"
           INSECURELDAP: "true"
+          NOCOMPLEXITY: "true"
         ports:
-          - 53:53
-          - 53:53/udp
+          # DNS is not needed unless connecting workstations
+          # - 53:53
+          # - 53:53/udp
           - 88:88
           - 88:88/udp
           - 135:135

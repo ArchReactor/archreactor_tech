@@ -19,6 +19,10 @@ Vagrant.configure("2") do |config|
     node.vm.provision :ansible do |ansible|
       ansible.playbook = "test_key_deploy_playbook.yml"
     end
+    node.vm.provider "virtualbox" do |v|
+      v.memory = 3072
+      v.cpus = 2
+    end
   end
 
   config.vm.define "test-desktop" do |node|
@@ -37,24 +41,20 @@ Vagrant.configure("2") do |config|
     end
   end
 
-
-  config.vm.define "test-windows-desktop" do |node|
-    node.vm.box = "gusztavvargadr/windows-10"
-    node.vm.network :private_network, :ip => '10.20.1.5'
-    node.vm.provision :hosts, :sync_hosts => true
-    node.vm.synced_folder "../", "/vagrant"
-    node.vm.provider "virtualbox" do |v|
-      v.gui = true
-    end
-  end
+  # Uncomment for Windows 10 desktop for testing
+  # config.vm.define "test-windows-desktop" do |node|
+  #   node.vm.box = "gusztavvargadr/windows-10"
+  #   node.vm.network :private_network, :ip => '10.20.1.5'
+  #   node.vm.provision :hosts, :sync_hosts => true
+  #   node.vm.synced_folder "../", "/vagrant"
+  #   node.vm.provider "virtualbox" do |v|
+  #     v.gui = true
+  #   end
+  # end
 
   config.trigger.after [:provision] do |t|
     t.name = "Reboot after provisioning"
     t.run = { :inline => "vagrant reload" }
   end
 
-  config.vm.provider "virtualbox" do |v|
-    v.memory = 2048
-    v.cpus = 2
-  end
 end
