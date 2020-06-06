@@ -1,5 +1,20 @@
 {% for item in nginx_redirects %}
 
+{% if item.ssl is defined %}
+server {
+    listen 443 ssl;
+    server_name {{ item.from }};
+    include /etc/nginx/snippets/{% if item.ssl_conf_name is defined %}{{ item.ssl_conf_name }}{% else %}{{ item.from }}{% endif %}.ssl.conf;
+    location / {
+        proxy_pass https://{{ item.to }}/;
+        proxy_redirect     off;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Host $server_name;
+    }
+}
+{% else %}
 server {
     listen 80;
     server_name {{ item.from }};
@@ -13,5 +28,6 @@ server {
         proxy_set_header   X-Forwarded-Host $server_name;
     }
 }
+{% endif %}
 
 {% endfor %}

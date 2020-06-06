@@ -26,4 +26,4 @@
         env:
           PHPLDAPADMIN_LDAP_HOSTS: "archreactor.net"
         ports:
-          - "443:443"
+          - "4432:443"

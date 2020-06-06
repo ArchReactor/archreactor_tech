@@ -29,7 +29,6 @@
     nginx_redirects:
       - from: jenkins.archreactor.net
         to: localhost:8088
-        ssl: no
 
   roles:
     - role: nginx

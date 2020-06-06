@@ -5,6 +5,7 @@
   vars:
 
     KEYCLOAK_PORT: 9909
+    KEYCLOAK_SSL_PORT: 443
     KEYCLOAK_HOST: "users.archreactor.net"
 
     nginx_redirects:
@@ -35,6 +36,7 @@
           DB_VENDOR: "h2"
         ports:
           - "{{ KEYCLOAK_PORT }}:8080"
+          - "{{ KEYCLOAK_SSL_PORT }}:8443"
         restart_policy: "unless-stopped"
     
     - name: Wait for keycloak to start
