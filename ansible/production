@@ -1,3 +1,6 @@
+[all:vars]
+VAULT_FOLDER="../vault"
+
 ##
 # Any server that needs docker
 ##
@@ -44,4 +47,20 @@ archreactor.net
 ##
 [rsync_server]
 archreactor.org
+archreactor.net
+
+[ldap_server]
+archreactor.net
+
+###
+# Samba Primary Domain Controller
+###
+[pdc]
+archreactor.net
+
+###
+# Keycloak server
+# users.archreactor.org
+###
+[keycloak_server]
 archreactor.net

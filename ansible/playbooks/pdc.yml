@@ -1,0 +1,74 @@
+---
+
+- hosts: pdc
+
+  vars:
+    HOST_IP: "{{ ansible_default_ipv4.address }}"
+    DNS_IP: 1.1.1.1
+
+  tasks:
+
+    - name: Install Samba as a PDC 
+      docker_container:
+        image: nowsci/samba-domain
+        name: samba
+        volumes:
+          - /etc/localtime:/etc/localtime:ro
+          - samba_data:/var/lib/samba
+          - samba_config:/etc/samba/external
+        env:
+          DOMAIN: "ad.archreactor.net"
+          DOMAINPASS: "P@ssw0rd!"
+          DNSFORWARDER: "{{ DNS_IP }}"
+          HOSTIP: "{{ HOST_IP }}"
+          INSECURELDAP: "true"
+          NOCOMPLEXITY: "true"
+        ports:
+          # DNS is not needed unless connecting workstations
+          # - 53:53
+          # - 53:53/udp
+          - 88:88
+          - 88:88/udp
+          - 135:135
+          - 137-138:137-138/udp
+          - 139:139
+          - 389:389
+          - 389:389/udp
+          - 445:445
+          - 464:464
+          - 464:464/udp
+          - 636:636
+          - 1024-1044:1024-1044
+          - 3268-3269:3268-3269
+        dns_search_domains:
+          - archreactor.net
+        dns_servers:
+          - "{{ HOST_IP }}"
+          - "{{ DNS_IP }}"
+        etc_hosts:
+          dc1.ad.archreactor.net: "{{ HOST_IP }}"
+          ad.archreactor.net: "{{ HOST_IP }}"
+          archreactor.net: "{{ HOST_IP }}"
+        hostname: dc1
+        capabilities:
+          - NET_ADMIN
+        devices:
+          - /dev/net/tun
+        privileged: true
+        restart_policy: always
+
+    # - name: Install Samba as a PDC 
+    #   docker_container:
+    #     image: instantlinux/samba-dc
+    #     name: samba
+    #     dns_search_domains:
+    #       - archreactor.net
+    #     dns_servers:
+    #       - "{{ DNS_IP }}"
+    #     hostname: archreactor.net
+    #     capabilities:
+    #       - NET_ADMIN
+    #     devices:
+    #       - /dev/net/tun
+    #     privileged: true
+    #     restart_policy: unless-stopped

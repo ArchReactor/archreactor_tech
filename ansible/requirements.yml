@@ -13,7 +13,6 @@ roles:
 
   - src: https://www.github.com/mrlesmithjr/ansible-nginx.git
     name: nginx
-  
 
 collections:
   

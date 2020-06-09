@@ -5,7 +5,7 @@ pipeline {
       stage('Sync backups') {
          steps {
             sh '''#!/bin/bash
-            docker exec rsync_server rsync -zavh -e "ssh -p 22022" root@archreactor.org:/data/ ./
+            docker exec rsync_server rsync -zavhI --no-perms --no-owner --no-group -e "ssh -p 22022" root@archreactor.org:/data/ /data/
             '''
          }
       }

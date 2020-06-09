@@ -1,0 +1,29 @@
+---
+
+- hosts: ldap_server
+
+  tasks:
+    # https://github.com/LasLabs/docker-alpine-samba-dc
+    # - name: Install Samba Domain Controller
+    #   docker_container:
+    #     image: laslabs/alpine-samba-dc:0.1.0
+    #     name: samba_pdc
+    #     env:
+    #       SAMBA_DC_REALM: 'archreactor.net'
+    #       SAMBA_DC_DOMAIN: 'ARCHREACTOR'
+    #       SAMBA_DC_ADMIN_PASSWD: 'P@ssw0rd!'
+    #       SAMBA_DC_DNS_BACKEND: 'SAMBA_INTERNAL'
+    #     capabilities:
+    #       - "SYS_ADMIN"
+    #     network_mode: "host"
+
+    # https://github.com/osixia/docker-phpLDAPadmin      
+    - name: Install phpldapadmin
+      docker_container:
+        image: osixia/phpldapadmin:0.9.0
+        name: phpldapadmin-service
+        hostname: phpldapadmin-service
+        env:
+          PHPLDAPADMIN_LDAP_HOSTS: "archreactor.net"
+        ports:
+          - "4432:443"

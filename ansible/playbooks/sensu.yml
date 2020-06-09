@@ -3,16 +3,9 @@
 - hosts: sensu_backend
 
   vars_files:
-    - ../vault/secrets.yml
-
-  vars:
-    SENSU_URL: "http://archreactor.org:8080"
-    SENSU_USER: "admin"
-    SENSU_PASS: "P@ssw0rd!"
+    - "{{ VAULT_FOLDER }}/secrets.yml"
 
   tasks:
-    - name: Ping test
-      ping:
 
     - name: Create sensu network for docker
       docker_network:
@@ -31,21 +24,29 @@
           - "8081:8081"
           - "3000:3000"
         env:
-          SENSU_BACKEND_CLUSTER_ADMIN_USERNAME: "{{ SENSU_USER }}"
-          SENSU_BACKEND_CLUSTER_ADMIN_PASSWORD: "{{ SENSU_PASS }}"
+          SENSU_BACKEND_CLUSTER_ADMIN_USERNAME: "{{ SENSU_AUTH.user }}"
+          SENSU_BACKEND_CLUSTER_ADMIN_PASSWORD: "{{ SENSU_AUTH.password }}"
         networks: 
           - name: "sensu"
         volumes:
           - "sensu-backend-data:/var/lib/sensu"
         command: "sensu-backend start --log-level debug"
+        restart_policy: "unless-stopped"
+
+    - name: Wait for sensu to start
+      wait_for:
+        port: "3000"
+        timeout: 20
 
     - name: Install Slack asset
       sensu.sensu_go.bonsai_asset:
+        auth: "{{ SENSU_AUTH }}"
         name: sensu/sensu-slack-handler
         version: 1.2.0
   
     - name: Setup filter to Only notify on state change
       sensu.sensu_go.filter:
+        auth: "{{ SENSU_AUTH }}"
         name: state_change_only
         action: allow
         expressions:
@@ -53,6 +54,7 @@
   
     - name: Install Slack handler
       sensu.sensu_go.pipe_handler:
+        auth: "{{ SENSU_AUTH }}"
         name: slack
         env_vars:
           SLACK_WEBHOOK_URL: "{{ SLACK_WEBHOOK_ENDPOINT }}"
@@ -66,16 +68,19 @@
   
     - name: Install Disk check asset
       sensu.sensu_go.bonsai_asset:
+        auth: "{{ SENSU_AUTH }}"
         name: sensu-plugins/sensu-plugins-disk-checks
         version: 5.0.1
   
     - name: Install Ruby runtime asset
       sensu.sensu_go.bonsai_asset:
+        auth: "{{ SENSU_AUTH }}"
         name: sensu/sensu-ruby-runtime
         version: 0.0.10
   
     - name: Add disk check
       sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
         name: disk_check
         command: "check-disk-usage.rb -p '(\\/var|\\/run|\\/sys|\\/snap)'"
         subscriptions:
@@ -90,11 +95,13 @@
     
     - name: Install load check asset
       sensu.sensu_go.bonsai_asset:
+        auth: "{{ SENSU_AUTH }}"
         name: sensu-plugins/sensu-plugins-load-checks
         version: 5.1.0
   
     - name: Add load check
       sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
         name: load_check
         command: "check-load.rb"
         subscriptions:
@@ -109,11 +116,13 @@
     
     - name: Install memory check asset
       sensu.sensu_go.bonsai_asset:
+        auth: "{{ SENSU_AUTH }}"
         name: sensu-plugins/sensu-plugins-memory-checks
         version: 4.1.1
   
     - name: Add memory check
       sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
         name: memory_check
         command: "check-memory-percent.rb"
         subscriptions:
@@ -125,14 +134,89 @@
         handlers:
           - slack
         publish: yes
+      
+    - name: Install https://monitoring-plugins.org assets
+      sensu.sensu_go.bonsai_asset:
+        auth: "{{ SENSU_AUTH }}"
+        name: sensu/monitoring-plugins
+        version: 2.5.0
+
+    - name: Add Wordpress check
+      sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
+        name: worpress
+        command: "check_http -H archreactor.org -p 88"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
+
+    - name: Add check for Jenkins
+      sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
+        name: jenkins
+        command: "check_http -H jenkins.archreactor.net -e 403"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
+
+    - name: Add check for snipe-it
+      sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
+        name: snipe-it
+        command: "check_http -H tools.archreactor.net"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
+
+    - name: Add check for Keycloak
+      sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
+        name: keycloak
+        command: "check_http -H users.archreactor.net"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
+
+    - name: Add check for Keycloak
+      sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
+        name: keycloak
+        command: "check_https_cert -u https://users.archreactor.net"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
 
 - hosts: sensu_agent
   
   vars:
     agent_config:
       backend-url: "ws://archreactor.org:8081"
-      subscriptions:
-        - checks
+      subscriptions: "{{ SENSU_CHECKS }}"
       
   roles:
     - role: sensu.sensu_go.agent

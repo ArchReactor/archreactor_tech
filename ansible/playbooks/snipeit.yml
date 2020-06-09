@@ -3,7 +3,7 @@
 - hosts: snipe_it_server
 
   vars_files:
-    - ../vault/secrets.yml
+    - "{{ VAULT_FOLDER }}/secrets.yml"
 
   vars:
     STATE: "present"
@@ -68,7 +68,7 @@
           APP_ENV: "production"
           APP_DEBUG: "false"
           APP_KEY: "{{ SNIPE_IT_API_KEY }}"
-          APP_URL: http://127.0.0.1:80
+          APP_URL: http://tools.archreactor.net
           APP_TIMEZONE: US/Central
           APP_LOCALE: en
           # - the hostname/IP address of your mailserver

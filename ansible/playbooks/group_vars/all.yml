@@ -1,0 +1,4 @@
+---
+
+SENSU_CHECKS:
+  - checks
