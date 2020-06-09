@@ -139,7 +139,7 @@
       sensu.sensu_go.bonsai_asset:
         auth: "{{ SENSU_AUTH }}"
         name: sensu/monitoring-plugins
-        version: 2.5.0
+        version: 2.5.2
 
     - name: Add Wordpress check
       sensu.sensu_go.check:
@@ -159,7 +159,7 @@
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: jenkins
-        command: "check_http -H jenkins.archreactor.net -e 403"
+        command: "check_http -H jenkins.archreactor.net -u /login"
         subscriptions:
           - checks
         interval: 120
@@ -173,7 +173,7 @@
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: snipe-it
-        command: "check_http -H tools.archreactor.net"
+        command: "check_http -H tools.archreactor.net -u /login"
         subscriptions:
           - checks
         interval: 120
@@ -197,10 +197,10 @@
           - slack
         publish: yes
 
-    - name: Add check for Keycloak
+    - name: Add check for Keycloak https
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
-        name: keycloak
+        name: keycloak_https
         command: "check_https_cert -u https://users.archreactor.net"
         subscriptions:
           - checks
