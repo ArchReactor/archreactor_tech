@@ -141,6 +141,12 @@
         name: sensu/monitoring-plugins
         version: 2.5.2
 
+    - name: Install sensu http plugins
+      sensu.sensu_go.bonsai_asset:
+        auth: "{{ SENSU_AUTH }}"
+        name: sensu-plugins/sensu-plugins-http
+        version: 6.0.0
+    
     - name: Add Wordpress check
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
@@ -187,7 +193,7 @@
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: keycloak
-        command: "check_http -H users.archreactor.net"
+        command: "check_http -H users.archreactor.net -u auth"
         subscriptions:
           - checks
         interval: 120
@@ -201,12 +207,13 @@
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: keycloak_https
-        command: "check_https_cert -u https://users.archreactor.net"
+        command: "check-https-cert.rb -u https://users.archreactor.net"
         subscriptions:
           - checks
         interval: 120
         runtime_assets:
-          - sensu/monitoring-plugins
+          - sensu-plugins/sensu-plugins-http
+          - sensu/sensu-ruby-runtime
         handlers:
           - slack
         publish: yes

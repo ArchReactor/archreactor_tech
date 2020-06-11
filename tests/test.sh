@@ -1,5 +1,6 @@
 #!/bin/bash
 
+vagrant plugin install vagrant-hosts
 vagrant up --parallel
 testing_command="vagrant ssh test-desktop -c 'cd /vagrant/ansible && ./deploy.sh -k -s ../../tests/vault'"
 
