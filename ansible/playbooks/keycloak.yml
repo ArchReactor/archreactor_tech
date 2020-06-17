@@ -28,19 +28,24 @@
 
     - name: Install Keycloak
       docker_container:
-        image: quay.io/keycloak/keycloak
+        image: jboss/keycloak
         name: keycloak
         env:
           KEYCLOAK_USER: "admin"
           KEYCLOAK_PASSWORD: "admin"
           DB_VENDOR: "h2"
+          PROXY_ADDRESS_FORWARDING: "true"
+        volumes:
+          - "/etc/letsencrypt/live/users.archreactor.net/fullchain.pem:/etc/x509/https/tls.crt"
+          - "/etc/letsencrypt/live/users.archreactor.net/privkey.pem:/etc/x509/https/tls.key"
         ports:
           - "{{ KEYCLOAK_PORT }}:8080"
           - "{{ KEYCLOAK_SSL_PORT }}:8443"
         restart_policy: "unless-stopped"
+        restart: yes
     
     - name: Wait for keycloak to start
       wait_for:
         host: "{{ KEYCLOAK_HOST }}"
-        port: "{{ KEYCLOAK_PORT }}"
+        port: "80"
         timeout: 8

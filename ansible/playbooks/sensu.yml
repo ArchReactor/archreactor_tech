@@ -139,8 +139,14 @@
       sensu.sensu_go.bonsai_asset:
         auth: "{{ SENSU_AUTH }}"
         name: sensu/monitoring-plugins
-        version: 2.5.0
+        version: 2.5.2
 
+    - name: Install sensu http plugins
+      sensu.sensu_go.bonsai_asset:
+        auth: "{{ SENSU_AUTH }}"
+        name: sensu-plugins/sensu-plugins-http
+        version: 6.0.0
+    
     - name: Add Wordpress check
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
@@ -159,7 +165,7 @@
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: jenkins
-        command: "check_http -H jenkins.archreactor.net -e 403"
+        command: "check_http -H jenkins.archreactor.net -u /login"
         subscriptions:
           - checks
         interval: 120
@@ -173,7 +179,7 @@
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: snipe-it
-        command: "check_http -H tools.archreactor.net"
+        command: "check_http -H tools.archreactor.net -u /login"
         subscriptions:
           - checks
         interval: 120
@@ -187,7 +193,7 @@
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: keycloak
-        command: "check_http -H users.archreactor.net"
+        command: "check_http -H users.archreactor.net -u auth"
         subscriptions:
           - checks
         interval: 120
@@ -197,16 +203,17 @@
           - slack
         publish: yes
 
-    - name: Add check for Keycloak
+    - name: Add check for Keycloak https
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
-        name: keycloak
-        command: "check_https_cert -u https://users.archreactor.net"
+        name: keycloak_https
+        command: "check-https-cert.rb -u https://users.archreactor.net"
         subscriptions:
           - checks
         interval: 120
         runtime_assets:
-          - sensu/monitoring-plugins
+          - sensu-plugins/sensu-plugins-http
+          - sensu/sensu-ruby-runtime
         handlers:
           - slack
         publish: yes

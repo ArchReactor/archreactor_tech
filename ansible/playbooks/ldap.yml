@@ -2,20 +2,24 @@
 
 - hosts: ldap_server
 
+  vars:
+    nginx_redirects:
+      - from: "ldap.archreactor.net"
+        to: "127.0.0.1:4432"
+
+  roles:
+    - role: nginx
+
   tasks:
-    # https://github.com/LasLabs/docker-alpine-samba-dc
-    # - name: Install Samba Domain Controller
-    #   docker_container:
-    #     image: laslabs/alpine-samba-dc:0.1.0
-    #     name: samba_pdc
-    #     env:
-    #       SAMBA_DC_REALM: 'archreactor.net'
-    #       SAMBA_DC_DOMAIN: 'ARCHREACTOR'
-    #       SAMBA_DC_ADMIN_PASSWD: 'P@ssw0rd!'
-    #       SAMBA_DC_DNS_BACKEND: 'SAMBA_INTERNAL'
-    #     capabilities:
-    #       - "SYS_ADMIN"
-    #     network_mode: "host"
+
+    - name: Generate redirect config
+      template:
+        src: nginx_redirect.j2
+        dest: /etc/nginx/sites-enabled/ldap.archreactor.net.conf
+        owner: www-data
+        group: www-data
+      notify: restart nginx
+      become: yes
 
     # https://github.com/osixia/docker-phpLDAPadmin      
     - name: Install phpldapadmin
@@ -24,6 +28,7 @@
         name: phpldapadmin-service
         hostname: phpldapadmin-service
         env:
-          PHPLDAPADMIN_LDAP_HOSTS: "archreactor.net"
+          PHPLDAPADMIN_LDAP_HOSTS: "10.42.20.143"
+          PHPLDAPADMIN_HTTPS: "false"
         ports:
-          - "4432:443"
+          - "4432:80"

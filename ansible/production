@@ -31,7 +31,7 @@ archreactor.net
 
 ##
 # Handles cron style jobs and backups
-# http://archrector.org:8080
+# http://archreactor.org:8080
 # http://jenkins.archreactor.net
 ##
 [jenkins_server]
@@ -63,4 +63,11 @@ archreactor.net
 # users.archreactor.org
 ###
 [keycloak_server]
+archreactor.net
+
+##
+# Secure web server
+# Just installs Certbot
+##
+[ssl]
 archreactor.net
