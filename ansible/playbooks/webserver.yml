@@ -13,7 +13,7 @@
 
     - name: Create volume for mysql
       docker_volume:
-        name: mysql
+        name: mysql-wordpress
 
     - name: Create volume for wordpress
       docker_volume:
@@ -26,12 +26,12 @@
         networks:
           - name: wordpress
         env:
-          MYSQL_DATABASE: exampledb
-          MYSQL_USER: exampleuser
+          MYSQL_DATABASE: wordpress
+          MYSQL_USER: wordpress
           MYSQL_PASSWORD: "{{ WORDPRESS_MYSQL_PASSWORD }}"
           MYSQL_RANDOM_ROOT_PASSWORD: '1'
         volumes:
-          - "mysql:/var/lib/mysql"
+          - "mysql-wordpress:/var/lib/mysql"
         restart_policy: "unless-stopped"
 
     - name: Install Wordpress
@@ -42,9 +42,9 @@
           - name: wordpress
         env:
           WORDPRESS_DB_HOST: mysql-wordpress
-          WORDPRESS_DB_USER: exampleuser
+          WORDPRESS_DB_USER: wordpress
           WORDPRESS_DB_PASSWORD: "{{ WORDPRESS_MYSQL_PASSWORD }}"
-          WORDPRESS_DB_NAME: exampledb
+          WORDPRESS_DB_NAME: wordpress
         ports:
           - "88:80"
         volumes:
