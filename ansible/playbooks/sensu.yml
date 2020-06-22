@@ -189,11 +189,25 @@
           - slack
         publish: yes
 
+    - name: Add check for Arch Reactor API
+      sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
+        name: archreactor_api
+        command: "check_http -H api.archreactor.net"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
+
     - name: Add check for Keycloak
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: keycloak
-        command: "check_http -H users.archreactor.net -u auth"
+        command: "check_http -H users.archreactor.net -u /auth"
         subscriptions:
           - checks
         interval: 120
@@ -207,7 +221,7 @@
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
         name: keycloak_https
-        command: "check-https-cert.rb -u https://users.archreactor.net"
+        command: "check-https-cert.rb -u https://users.archreactor.net/auth"
         subscriptions:
           - checks
         interval: 120
