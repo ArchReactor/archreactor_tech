@@ -50,5 +50,12 @@ Jenkins handles backups and cron style jobs.
 Backups are stored in /srv/rsync/backups
 They are then synced between servers for extra safety.
 
+# Arch Reactor API
+http://api.archreactor.net
+
+https://github.com/ArchReactor/archreactor_api
+
+API server acts as middleware for other APIs like CivicCRM and Snipe-IT
+
 # Testing
 Test are located in /tests folder. Vagrant is used to launch virtual Ubuntu servers and a workstation using Virtual Box. See [tests/README.md](tests/README.md) for more details.
