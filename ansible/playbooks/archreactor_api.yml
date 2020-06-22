@@ -1,0 +1,53 @@
+---
+
+- hosts: archreactor_api_server
+
+  vars:
+
+    API_PORT: 3001
+    PATH_TO_NODE_FILES: "/opt/archreactor_api"
+    SERVER_IMAGE_NAME: "archreactor_api"
+
+    nginx_redirects:
+      - from: "api.archreactor.net"
+        to: "127.0.0.1:{{ API_PORT }}"
+
+  roles:
+    - role: nginx
+
+  tasks:
+
+    - name: Generate redirect config
+      template:
+        src: nginx_redirect.j2
+        dest: /etc/nginx/sites-enabled/api.archreactor.net.conf
+        owner: www-data
+        group: www-data
+      notify: restart nginx
+      become: yes
+
+    - name: Create dir for api server
+      file:
+        path: "{{ PATH_TO_NODE_FILES }}"
+        state: directory
+      become: yes
+      
+    - name: Download git repo
+      git:
+        repo: https://github.com/ArchReactor/archreactor_api.git
+        dest: "{{ PATH_TO_NODE_FILES }}"
+      become: yes
+
+    - name: Build server image
+      docker_image:
+        name: "{{ SERVER_IMAGE_NAME }}"
+        build:
+          path: "{{ PATH_TO_NODE_FILES }}"
+
+    - name: Run Archreactor API server
+      docker_container: 
+        name: "{{ SERVER_IMAGE_NAME }}"
+        image: "{{ SERVER_IMAGE_NAME }}"
+        ports:
+          - "{{ API_PORT }}:3000"
+        restart_policy: "always"

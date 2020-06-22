@@ -71,3 +71,10 @@ archreactor.net
 ##
 [ssl]
 archreactor.net
+
+##
+# http://api.archreactor.net
+# API server acts as middle ware for other APIs like CivicCRM and Snipe-IT
+##
+[archreactor_api_server]
+archreactor.net
