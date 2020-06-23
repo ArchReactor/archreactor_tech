@@ -54,6 +54,7 @@
           - "snipe-it:/var/lib/mysql"
         command: "--default-authentication-plugin=mysql_native_password"
         state: "{{ CONTAINER_STATE }}"
+        restart_policy: "always"
       
     - name: Install snipe-it server
       docker_container:
@@ -90,3 +91,4 @@
         ports:
           - "3051:80"
         state: "{{ CONTAINER_STATE }}"
+        restart_policy: "always"
