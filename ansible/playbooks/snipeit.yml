@@ -6,6 +6,8 @@
     - "{{ VAULT_FOLDER }}/secrets.yml"
 
   vars:
+    SNIPEIT_VOLUME_NAME: "snipe-it-uploads"
+    SNIPEIT_MYSQL_VOLUME: "snipe-it-mysql"
     STATE: "present"
     CONTAINER_STATE: "started"
 
@@ -34,10 +36,16 @@
         name: snipe-it
         state: "{{ STATE }}"
 
-    - name: Create volume from snipe-it mysql
+    - name: Create volume for snipe-it mysql
       docker_volume:
-        name: snipe-it
+        name: "{{ SNIPEIT_MYSQL_VOLUME }}"
         state: "{{ STATE }}"
+
+    - name: Create volume for snipe-it uploads
+      docker_volume:
+        name: "{{ SNIPEIT_VOLUME_NAME }}"
+        state: "{{ STATE }}"
+    
 
     - name: Install mysql
       docker_container:
@@ -51,7 +59,7 @@
         networks:
           - name: snipe-it
         volumes:
-          - "snipe-it:/var/lib/mysql"
+          - "{{ SNIPEIT_MYSQL_VOLUME }}:/var/lib/mysql"
         command: "--default-authentication-plugin=mysql_native_password"
         state: "{{ CONTAINER_STATE }}"
         restart_policy: "always"
@@ -90,5 +98,7 @@
           - name: snipe-it
         ports:
           - "3051:80"
+        volumes:
+          - "{{ SNIPEIT_VOLUME_NAME }}:/var/lib/snipeit"
         state: "{{ CONTAINER_STATE }}"
         restart_policy: "always"

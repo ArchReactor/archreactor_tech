@@ -189,6 +189,20 @@
           - slack
         publish: yes
 
+    - name: Add check for Node Red
+      sensu.sensu_go.check:
+        auth: "{{ SENSU_AUTH }}"
+        name: snipe-it
+        command: "check_http -H nodered.archreactor.net"
+        subscriptions:
+          - checks
+        interval: 120
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
+
     - name: Add check for Arch Reactor API
       sensu.sensu_go.check:
         auth: "{{ SENSU_AUTH }}"
