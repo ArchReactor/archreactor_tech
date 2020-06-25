@@ -32,3 +32,4 @@
           PHPLDAPADMIN_HTTPS: "false"
         ports:
           - "4432:80"
+        restart_policy: "always"
