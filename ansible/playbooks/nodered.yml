@@ -10,6 +10,8 @@
     nginx_redirects:
       - from: "nodered.archreactor.net"
         to: "127.0.0.1:{{ NODE_RED_PORT }}"
+      - from: "dashboard.archreactor.net"
+        to: "127.0.0.1:{{ NODE_RED_PORT }}/ui"
 
   roles:
     - role: nginx
@@ -29,7 +31,7 @@
       docker_volume:
         name: "{{ VOLUME_NAME }}"
 
-    - name: Run Archreactor API server
+    - name: Run Node Red server
       docker_container: 
         name: "node-red"
         image: "nodered/node-red"
