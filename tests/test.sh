@@ -22,7 +22,7 @@ while [[ "${DELAY}" -gt 0 ]]; do
    : $((DELAY--))
 done
 
-if [[ "${ERROR}" -ne 0 ]] 
+if [[ "${ERROR}" -eq 0 ]] 
 then
   vagrant ssh test-desktop -c 'cd /vagrant/tests && ./trigger_sensu_checks.sh'
   ERROR="${?}"

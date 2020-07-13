@@ -19,3 +19,7 @@
 - include: pdc.yml
 
 - include: keycloak.yml
+
+- include: archreactor_api.yml
+
+- include: nodered.yml

@@ -22,6 +22,7 @@
         - /var/run/docker.sock:/var/run/docker.sock:rw
         - /srv/rsync/backups:/srv
       user: "1000:998"
+      restart_policy: "always"
 
 - hosts: jenkins_server_proxy
 
