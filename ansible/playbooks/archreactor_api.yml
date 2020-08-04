@@ -44,7 +44,7 @@
           path: '{{ PATH_TO_NODE_FILES }}'
         force_source: yes
 
-    - name: Run Archreactor API server
+    - name: Run Arch Reactor API server
       docker_container:
         name: '{{ SERVER_IMAGE_NAME }}'
         image: '{{ SERVER_IMAGE_NAME }}'
