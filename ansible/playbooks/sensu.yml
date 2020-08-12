@@ -152,7 +152,7 @@
         command: 'check_http -H {{ item.url }} {{ item.extra_args }}'
         subscriptions:
           - checks
-        interval: 120
+        interval: 300
         runtime_assets:
           - sensu/monitoring-plugins
         handlers:
@@ -160,11 +160,13 @@
         publish: yes
       with_items:
         - { url: 'archreactor.org', extra_args: '-p 88' }
-        - { url: 'jenkins.archreactor.net', extra_args: '' }
+        - { url: 'jenkins.archreactor.net', extra_args: '-u /login' }
         - { url: 'tools.archreactor.net', extra_args: '-u /login' }
         - { url: 'nodered.archreactor.net', extra_args: '' }
         - { url: 'api.archreactor.net', extra_args: '' }
         - { url: 'users.archreactor.net', extra_args: '-u /auth' }
+        - { url: 'sensu.archreactor.org', extra_args: '-p 3000' }
+        - { url: 'jenkins.archreactor.org', extra_args: '-p 8088 -u /login' }
 
     - name: Add check for Keycloak https
       sensu.sensu_go.check:
