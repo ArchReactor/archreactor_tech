@@ -1,22 +1,19 @@
 ---
-
 - hosts: archreactor_api_server
 
   vars:
-
     API_PORT: 3001
-    PATH_TO_NODE_FILES: "/opt/archreactor_api"
-    SERVER_IMAGE_NAME: "archreactor_api"
+    PATH_TO_NODE_FILES: '/opt/archreactor_api'
+    SERVER_IMAGE_NAME: 'archreactor_api'
 
     nginx_redirects:
-      - from: "api.archreactor.net"
-        to: "127.0.0.1:{{ API_PORT }}"
+      - from: 'api.archreactor.net'
+        to: '127.0.0.1:{{ API_PORT }}'
 
   roles:
     - role: nginx
 
   tasks:
-
     - name: Generate redirect config
       template:
         src: nginx_redirect.j2
@@ -28,32 +25,33 @@
 
     - name: Create dir for api server
       file:
-        path: "{{ PATH_TO_NODE_FILES }}"
+        path: '{{ PATH_TO_NODE_FILES }}'
         state: directory
       become: yes
-      
+
     - name: Download git repo
       git:
         repo: https://github.com/ArchReactor/archreactor_api.git
-        dest: "{{ PATH_TO_NODE_FILES }}"
+        dest: '{{ PATH_TO_NODE_FILES }}'
+        update: yes
       become: yes
 
     - name: Build server image
       docker_image:
-        name: "{{ SERVER_IMAGE_NAME }}"
-        source: "build"
+        name: '{{ SERVER_IMAGE_NAME }}'
+        source: 'build'
         build:
-          path: "{{ PATH_TO_NODE_FILES }}"
+          path: '{{ PATH_TO_NODE_FILES }}'
         force_source: yes
 
-    - name: Run Archreactor API server
-      docker_container: 
-        name: "{{ SERVER_IMAGE_NAME }}"
-        image: "{{ SERVER_IMAGE_NAME }}"
+    - name: Run Arch Reactor API server
+      docker_container:
+        name: '{{ SERVER_IMAGE_NAME }}'
+        image: '{{ SERVER_IMAGE_NAME }}'
         ports:
-          - "{{ API_PORT }}:3000"
+          - '{{ API_PORT }}:3000'
         etc_hosts:
-          users.archreactor.net: "{{ ansible_default_ipv4.address }}"
-          tools.archreactor.net: "{{ ansible_default_ipv4.address }}"
-        restart_policy: "always"
+          users.archreactor.net: '{{ ansible_default_ipv4.address }}'
+          tools.archreactor.net: '{{ ansible_default_ipv4.address }}'
+        restart_policy: 'always'
         restart: yes

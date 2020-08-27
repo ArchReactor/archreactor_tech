@@ -41,6 +41,8 @@ Applications like Wordpress and Drupal authenticate with Keycloak using OpenIDCo
 
 Keyclock settings can be found at [docs/KEYCLOAK.md](docs/KEYCLOAK.md)
 
+Create a new user at [https://users.archreactor.net/auth/realms/archreactor/account/](https://users.archreactor.net/auth/realms/archreactor/account/)
+
 # Jenkins and Backups
 http://jenkins.archreactor.net
 http://archreactor.org:8080

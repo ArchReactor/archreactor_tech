@@ -1,0 +1,6 @@
+---
+
+- hosts: ssl
+
+  roles:
+    - {name: certbot, become: yes}
