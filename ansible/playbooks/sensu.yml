@@ -167,6 +167,7 @@
         - { url: 'users.archreactor.net', extra_args: '-u /auth' }
         - { url: 'sensu.archreactor.org', extra_args: '-p 3000' }
         - { url: 'jenkins.archreactor.org', extra_args: '-p 8088 -u /login' }
+        - { url: 'moodle.archreactor.net', extra_args: '' }
 
     - name: Add check for Keycloak https
       sensu.sensu_go.check:

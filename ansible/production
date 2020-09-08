@@ -78,3 +78,10 @@ archreactor.net
 ##
 [archreactor_api_server]
 archreactor.net
+
+##
+# http://moodle.archreactor.net
+# Online classes
+##
+[moodle]
+archreactor.net
