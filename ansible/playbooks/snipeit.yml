@@ -1,51 +1,30 @@
 ---
-
 - hosts: snipe_it_server
 
   vars_files:
-    - "{{ VAULT_FOLDER }}/secrets.yml"
+    - '{{ VAULT_FOLDER }}/secrets.yml'
 
   vars:
-    SNIPEIT_VOLUME_NAME: "snipe-it-uploads"
-    SNIPEIT_MYSQL_VOLUME: "snipe-it-mysql"
-    STATE: "present"
-    CONTAINER_STATE: "started"
-
-    nginx_redirects:
-      - from: tools.archreactor.net
-        to: 127.0.0.1:3051
-      - from: tools
-        to: 127.0.0.1:3051
-  
-  roles:
-    - role: nginx
+    SNIPEIT_VOLUME_NAME: 'snipe-it-uploads'
+    SNIPEIT_MYSQL_VOLUME: 'snipe-it-mysql'
+    STATE: 'present'
+    CONTAINER_STATE: 'started'
 
   tasks:
-
-    - name: Generate redirect config
-      template:
-        src: nginx_redirect.j2
-        dest: /etc/nginx/sites-enabled/tools.archreactor.net.conf
-        owner: www-data
-        group: www-data
-      notify: restart nginx
-      become: yes
-
     - name: Setup network for snipe-it and mysql
       docker_network:
         name: snipe-it
-        state: "{{ STATE }}"
+        state: '{{ STATE }}'
 
     - name: Create volume for snipe-it mysql
       docker_volume:
-        name: "{{ SNIPEIT_MYSQL_VOLUME }}"
-        state: "{{ STATE }}"
+        name: '{{ SNIPEIT_MYSQL_VOLUME }}'
+        state: '{{ STATE }}'
 
     - name: Create volume for snipe-it uploads
       docker_volume:
-        name: "{{ SNIPEIT_VOLUME_NAME }}"
-        state: "{{ STATE }}"
-    
+        name: '{{ SNIPEIT_VOLUME_NAME }}'
+        state: '{{ STATE }}'
 
     - name: Install mysql
       docker_container:
@@ -54,16 +33,16 @@
         env:
           MYSQL_DATABASE: snipeit
           MYSQL_USER: snipeit
-          MYSQL_PASSWORD: "{{ SNIPE_IT_MYSQL_PASSWORD }}"
-          MYSQL_ROOT_PASSWORD: "{{ SNIPE_IT_MYSQL_ROOT_PASSWORD }}"
+          MYSQL_PASSWORD: '{{ SNIPE_IT_MYSQL_PASSWORD }}'
+          MYSQL_ROOT_PASSWORD: '{{ SNIPE_IT_MYSQL_ROOT_PASSWORD }}'
         networks:
           - name: snipe-it
         volumes:
-          - "{{ SNIPEIT_MYSQL_VOLUME }}:/var/lib/mysql"
-        command: "--default-authentication-plugin=mysql_native_password"
-        state: "{{ CONTAINER_STATE }}"
-        restart_policy: "always"
-      
+          - '{{ SNIPEIT_MYSQL_VOLUME }}:/var/lib/mysql'
+        command: '--default-authentication-plugin=mysql_native_password'
+        state: '{{ CONTAINER_STATE }}'
+        restart_policy: 'always'
+
     - name: Install snipe-it server
       docker_container:
         image: snipe/snipe-it
@@ -71,34 +50,34 @@
         env:
           MYSQL_DATABASE: snipeit
           MYSQL_USER: snipeit
-          MYSQL_PASSWORD: "{{ SNIPE_IT_MYSQL_PASSWORD }}"
-          MYSQL_ROOT_PASSWORD: "{{ SNIPE_IT_MYSQL_ROOT_PASSWORD }}"
+          MYSQL_PASSWORD: '{{ SNIPE_IT_MYSQL_PASSWORD }}'
+          MYSQL_ROOT_PASSWORD: '{{ SNIPE_IT_MYSQL_ROOT_PASSWORD }}'
           MYSQL_PORT_3306_TCP_ADDR: mysql-snipe-it
-          APP_ENV: "production"
-          APP_DEBUG: "false"
-          APP_KEY: "{{ SNIPE_IT_API_KEY }}"
+          APP_ENV: 'production'
+          APP_DEBUG: 'false'
+          APP_KEY: '{{ SNIPE_IT_API_KEY }}'
           APP_URL: http://tools.archreactor.net
           APP_TIMEZONE: US/Central
           APP_LOCALE: en
           # - the hostname/IP address of your mailserver
           MAIL_PORT_587_TCP_ADDR: smtp.gmail.com
           #the port for the mailserver (probably 587, could be another)
-          MAIL_PORT_587_TCP_PORT: "587"
+          MAIL_PORT_587_TCP_PORT: '587'
           # the default from address, and from name for emails
-          MAIL_ENV_FROM_ADDR: "snipeit@archreactor.org"
-          MAIL_ENV_FROM_NAME: "Archreactor Admin"
+          MAIL_ENV_FROM_ADDR: 'snipeit@archreactor.org'
+          MAIL_ENV_FROM_NAME: 'Archreactor Admin'
           # - pick 'tls' for SMTP-over-SSL, 'tcp' for unencrypted
           MAIL_ENV_ENCRYPTION: tls
           # SMTP username and password
           MAIL_ENV_USERNAME: admin@archreactor.org
-          MAIL_ENV_PASSWORD: "{{ GMAIL_APP_PASSWORD }}"
-          MAIL_REPLYTO_ADDR: "snipeit@archreactor.org"
-          MAIL_REPLYTO_NAME: "Snipe-IT"
+          MAIL_ENV_PASSWORD: '{{ GMAIL_APP_PASSWORD }}'
+          MAIL_REPLYTO_ADDR: 'snipeit@archreactor.org'
+          MAIL_REPLYTO_NAME: 'Snipe-IT'
         networks:
           - name: snipe-it
         ports:
-          - "3051:80"
+          - '3051:80'
         volumes:
-          - "{{ SNIPEIT_VOLUME_NAME }}:/var/lib/snipeit"
-        state: "{{ CONTAINER_STATE }}"
-        restart_policy: "always"
+          - '{{ SNIPEIT_VOLUME_NAME }}:/var/lib/snipeit'
+        state: '{{ CONTAINER_STATE }}'
+        restart_policy: 'always'

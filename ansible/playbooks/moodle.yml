@@ -1,24 +1,7 @@
 ---
 - hosts: moodle
 
-  vars:
-    nginx_redirects:
-      - from: moodle.archreactor.net
-        to: 127.0.0.1:8181
-
-  roles:
-    - role: nginx
-
   tasks:
-    - name: Generate redirect config
-      template:
-        src: nginx_redirect.j2
-        dest: /etc/nginx/sites-enabled/moodle.archreactor.net.conf
-        owner: www-data
-        group: www-data
-      notify: restart nginx
-      become: yes
-
     - name: Install Moodle volumes
       docker_volume:
         name: '{{ item }}'

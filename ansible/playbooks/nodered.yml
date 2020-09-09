@@ -1,47 +1,26 @@
 ---
-
 - hosts: archreactor_api_server
 
   vars:
-
     NODE_RED_PORT: 1880
-    VOLUME_NAME: "node-red"
-
-    nginx_redirects:
-      - from: "nodered.archreactor.net"
-        to: "127.0.0.1:{{ NODE_RED_PORT }}"
-      - from: "dashboard.archreactor.net"
-        to: "127.0.0.1:{{ NODE_RED_PORT }}/ui"
-
-  roles:
-    - role: nginx
+    VOLUME_NAME: 'node-red'
 
   tasks:
-
-    - name: Generate redirect config
-      template:
-        src: nginx_redirect.j2
-        dest: /etc/nginx/sites-enabled/nodered.archreactor.net.conf
-        owner: www-data
-        group: www-data
-      notify: restart nginx
-      become: yes
-
     - name: Created docker volume for Node red
       docker_volume:
-        name: "{{ VOLUME_NAME }}"
+        name: '{{ VOLUME_NAME }}'
 
     - name: Run Node Red server
-      docker_container: 
-        name: "node-red"
-        image: "nodered/node-red"
+      docker_container:
+        name: 'node-red'
+        image: 'nodered/node-red'
         ports:
-          - "{{ NODE_RED_PORT }}:1880"
+          - '{{ NODE_RED_PORT }}:1880'
         volumes:
-          - "{{ VOLUME_NAME }}:/data"
+          - '{{ VOLUME_NAME }}:/data'
         etc_hosts:
-          api.archreactor.net: "{{ ansible_default_ipv4.address }}"
-          users.archreactor.net: "{{ ansible_default_ipv4.address }}"
-          tools.archreactor.net: "{{ ansible_default_ipv4.address }}"
-        restart_policy: "always"
+          api.archreactor.net: '{{ ansible_default_ipv4.address }}'
+          users.archreactor.net: '{{ ansible_default_ipv4.address }}'
+          tools.archreactor.net: '{{ ansible_default_ipv4.address }}'
+        restart_policy: 'always'
         restart: yes
