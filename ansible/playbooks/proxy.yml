@@ -34,6 +34,15 @@
         letsencrypt: true
         letsencrypt_email: 'admin@archreactor.org'
 
+      dashboard.archreactor.net:
+        domains:
+          - dashboard.archreactor.net
+        upstreams:
+          - { backend_address: 127.0.0.1, backend_port: 1880 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
       jenkins.archreactor.net:
         domains:
           - jenkins.archreactor.net
@@ -63,4 +72,12 @@
 
   roles:
     - role: nginx-revproxy
+      become: yes
+
+  tasks:
+    - name: Redirect dashboard.archreactor.net to dashboard.archreactor.net/ui
+      lineinfile:
+        path: /etc/nginx/sites-available/dashboard.archreactor.net.conf
+        regexp: '^\s*proxy_pass http://dashboard.archreactor.net_backend'
+        line: '      proxy_pass http://dashboard.archreactor.net_backend/ui/;'
       become: yes
