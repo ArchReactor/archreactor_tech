@@ -18,7 +18,7 @@ These are workstation requirements. Ansible is run on your computer and configur
 The deploy script has a few options. Like changing your username or choosing a specific playbook. `deploy.sh -h` for usage
 
 Deploy script runs the Ansible playbook anisble/playbooks/site.yml using ansible/production as a list of hosts.
-Secrets are kept in ansible/vault. They are decrypted with the deploy.sh script using ansible-vault. You can prompt for the vault password with `-k` or keep it in your home directory as ~/.vault_pass.txt
+Secrets are kept in ansible/vault. They are decrypted with the deploy.sh script using ansible-vault. You can prompt for the vault password with `-k` or keep it in your home directory as ~/.vault_pass.txt<br>
 Looking in [ansible/production](ansible/production) is a good place to see what software is on what server.
 
 # Architecture
