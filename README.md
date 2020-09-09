@@ -13,7 +13,7 @@ These are workstation requirements. Ansible is run on your computer and configur
 
 # Deploying
 
-`deploy.sh`
+[`ansible/deploy.sh`](ansible/deploy.sh)
 
 The deploy script has a few options. Like changing your username or choosing a specific playbook. `deploy.sh -h` for usage
 
