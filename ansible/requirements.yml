@@ -1,6 +1,5 @@
 ---
 roles:
-
   - src: https://github.com/geerlingguy/ansible-role-docker
     version: master
     name: geerlingguy.docker
@@ -17,6 +16,8 @@ roles:
   - src: https://github.com/geerlingguy/ansible-role-certbot
     name: certbot
 
+  - src: https://github.com/hispanico/ansible-nginx-revproxy.git
+    name: nginx-revproxy
+
 collections:
-  
   - name: sensu.sensu_go

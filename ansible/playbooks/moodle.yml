@@ -1,0 +1,46 @@
+---
+- hosts: moodle
+
+  tasks:
+    - name: Install Moodle volumes
+      docker_volume:
+        name: '{{ item }}'
+      with_items:
+        - mariadb_data
+        - moodle_data
+        - moodledata_data
+
+    - name: Setup network for moodle
+      docker_network:
+        name: moodle
+
+    - name: Setup mariadb
+      docker_container:
+        name: mariadb
+        image: 'docker.io/bitnami/mariadb:10.3-debian-10'
+        env:
+          ALLOW_EMPTY_PASSWORD: 'yes'
+          MARIADB_USER: bn_moodle
+          MARIADB_DATABASE: bitnami_moodle
+        networks:
+          - name: moodle
+
+    # https://hub.docker.com/r/bitnami/moodle
+    - name: Setup Moodle
+      docker_container:
+        name: moodle
+        image: 'docker.io/bitnami/moodle:3-debian-10'
+        ports:
+          - '8181:8080'
+          - '18443:8443'
+        env:
+          MOODLE_DATABASE_HOST: mariadb
+          MOODLE_DATABASE_PORT_NUMBER: '3306'
+          MOODLE_DATABASE_USER: bn_moodle
+          MOODLE_DATABASE_NAME: bitnami_moodle
+          ALLOW_EMPTY_PASSWORD: 'yes'
+        volumes:
+          - 'moodle_data:/bitnami/moodle'
+          - 'moodledata_data:/bitnami/moodledata'
+        networks:
+          - name: moodle

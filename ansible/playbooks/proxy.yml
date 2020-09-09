@@ -1,0 +1,66 @@
+---
+- hosts: proxy
+
+  vars:
+    nginx_revproxy_sites:
+      default:
+        ssl: false
+        letsencrypt: false
+
+      moodle.archreactor.net:
+        domains:
+          - moodle.archreactor.net
+        upstreams:
+          - { backend_address: 127.0.0.1, backend_port: 8181 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
+      users.archreactor.net:
+        domains:
+          - users.archreactor.net
+        upstreams:
+          - { backend_address: 127.0.0.1, backend_port: 9909 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
+      nodered.archreactor.net:
+        domains:
+          - nodered.archreactor.net
+        upstreams:
+          - { backend_address: 127.0.0.1, backend_port: 1880 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
+      jenkins.archreactor.net:
+        domains:
+          - jenkins.archreactor.net
+        upstreams:
+          - { backend_address: 127.0.0.1, backend_port: 8088 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
+      tools.archreactor.net:
+        domains:
+          - tools.archreactor.net
+        upstreams:
+          - { backend_address: 127.0.0.1, backend_port: 3051 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
+      api.archreactor.net:
+        domains:
+          - api.archreactor.net
+        upstreams:
+          - { backend_address: 127.0.0.1, backend_port: 3001 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
+  roles:
+    - role: nginx-revproxy
+      become: yes

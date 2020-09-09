@@ -38,9 +38,6 @@ archreactor.net
 archreactor.org
 archreactor.net
 
-[jenkins_server_proxy]
-archreactor.net
-
 ##
 # Rsync server running on port 22022
 # Servers have access to /srv/rsync/backups
@@ -77,4 +74,14 @@ archreactor.net
 # API server acts as middle ware for other APIs like CivicCRM and Snipe-IT
 ##
 [archreactor_api_server]
+archreactor.net
+
+##
+# http://moodle.archreactor.net
+# Online classes
+##
+[moodle]
+archreactor.net
+
+[proxy]
 archreactor.net

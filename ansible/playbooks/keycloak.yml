@@ -3,26 +3,10 @@
 
   vars:
     KEYCLOAK_PORT: 9909
-    KEYCLOAK_SSL_PORT: 443
+    KEYCLOAK_SSL_PORT: 8443
     KEYCLOAK_HOST: 'users.archreactor.net'
 
-    nginx_redirects:
-      - from: '{{ KEYCLOAK_HOST }}'
-        to: '127.0.0.1:{{ KEYCLOAK_PORT }}'
-
-  roles:
-    - role: nginx
-
   tasks:
-    - name: Generate redirect config
-      template:
-        src: nginx_redirect.j2
-        dest: /etc/nginx/sites-enabled/users.archreactor.net.conf
-        owner: www-data
-        group: www-data
-      notify: restart nginx
-      become: yes
-
     - name: Create Volume for Keycloak data
       docker_volume:
         name: keycloak_data
