@@ -17,19 +17,21 @@
     - name: Setup mariadb
       docker_container:
         name: mariadb
-        image: 'docker.io/bitnami/mariadb:10.3-debian-10'
+        image: 'docker.io/bitnami/mariadb:latest'
         env:
           ALLOW_EMPTY_PASSWORD: 'yes'
           MARIADB_USER: bn_moodle
           MARIADB_DATABASE: bitnami_moodle
         networks:
           - name: moodle
+        volumes:
+          - 'mariadb_data:/bitnami/mariadb'
 
     # https://hub.docker.com/r/bitnami/moodle
     - name: Setup Moodle
       docker_container:
         name: moodle
-        image: 'docker.io/bitnami/moodle:3-debian-10'
+        image: 'docker.io/bitnami/moodle:latest'
         ports:
           - '8181:8080'
           - '18443:8443'
@@ -38,7 +40,11 @@
           MOODLE_DATABASE_PORT_NUMBER: '3306'
           MOODLE_DATABASE_USER: bn_moodle
           MOODLE_DATABASE_NAME: bitnami_moodle
+          MOODLE_EMAIL: admin@archreactor.org
           ALLOW_EMPTY_PASSWORD: 'yes'
+        etc_hosts:
+          api.archreactor.net: '{{ ansible_default_ipv4.address }}'
+          users.archreactor.net: '{{ ansible_default_ipv4.address }}'
         volumes:
           - 'moodle_data:/bitnami/moodle'
           - 'moodledata_data:/bitnami/moodledata'
