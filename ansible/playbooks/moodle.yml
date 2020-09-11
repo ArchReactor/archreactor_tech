@@ -1,6 +1,13 @@
 ---
 - hosts: moodle
 
+  vars_files:
+    - '{{ VAULT_FOLDER }}/secrets.yml'
+
+  vars:
+    MOODLE_DB_USER: "bn_moodle"
+    MOODLE_DB_NAME: "bitnami_moodle"
+
   tasks:
     - name: Install Moodle volumes
       docker_volume:
@@ -17,28 +24,43 @@
     - name: Setup mariadb
       docker_container:
         name: mariadb
-        image: 'docker.io/bitnami/mariadb:10.3-debian-10'
+        image: 'docker.io/bitnami/mariadb:latest'
         env:
-          ALLOW_EMPTY_PASSWORD: 'yes'
-          MARIADB_USER: bn_moodle
-          MARIADB_DATABASE: bitnami_moodle
+          MARIADB_USER: "{{ MOODLE_DB_USER }}"
+          MARIADB_DATABASE: "{{ MOODLE_DB_NAME }}"
+          MARIADB_PASSWORD: "{{ MOODLE_DB_PASSWORD }}"
+          MARIADB_ROOT_PASSWORD: "{{ MOODLE_DB_PASSWORD }}"
         networks:
           - name: moodle
+        volumes:
+          - 'mariadb_data:/bitnami/mariadb'
 
     # https://hub.docker.com/r/bitnami/moodle
     - name: Setup Moodle
       docker_container:
         name: moodle
-        image: 'docker.io/bitnami/moodle:3-debian-10'
+        image: 'docker.io/bitnami/moodle:latest'
         ports:
           - '8181:8080'
           - '18443:8443'
         env:
           MOODLE_DATABASE_HOST: mariadb
           MOODLE_DATABASE_PORT_NUMBER: '3306'
-          MOODLE_DATABASE_USER: bn_moodle
-          MOODLE_DATABASE_NAME: bitnami_moodle
-          ALLOW_EMPTY_PASSWORD: 'yes'
+          MOODLE_DATABASE_USER: "{{ MOODLE_DB_USER }}"
+          MOODLE_DATABASE_NAME: "{{ MOODLE_DB_NAME }}"
+          MOODLE_EMAIL: admin@archreactor.org
+          MOODLE_SITE_NAME: "Arch Reactor High"
+          MOODLE_DATABASE_PASSWORD: "{{ MOODLE_DB_PASSWORD }}"
+          MOODLE_USERNAME: admin
+          MOODLE_PASSWORD: "{{ MOODLE_ADMIN_PASSWORD }}"
+          MOODLE_SMTP_HOST: "smtp.gmail.com"
+          MOODLE_SMTP_PORT: "587"
+          MOODLE_SMTP_USER: admin@archreactor.org
+          MOODLE_SMTP_PASSWORD: "{{ GMAIL_APP_PASSWORD }}"
+          MOODLE_SMTP_PROTOCOL: "tls"
+        etc_hosts:
+          api.archreactor.net: '{{ ansible_default_ipv4.address }}'
+          users.archreactor.net: '{{ ansible_default_ipv4.address }}'
         volumes:
           - 'moodle_data:/bitnami/moodle'
           - 'moodledata_data:/bitnami/moodledata'

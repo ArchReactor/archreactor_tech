@@ -1,73 +1,82 @@
+## OpenID endpoints
+
+[https://users.archreactor.net/auth/realms/archreactor/.well-known/openid-configuration](https://users.archreactor.net/auth/realms/archreactor/.well-known/openid-configuration)
+
 ## Ldap settings in Keycloack
-Provider ID 
+
+Provider ID
 0edad132-d110-4ade-afbd-5067e3793815
-Enabled 
+Enabled
 ON
-Console Display Name 
+Console Display Name
 ldap
-Priority 
+Priority
 0
-Import Users 
+Import Users
 OFF
-Edit Mode 
+Edit Mode
 
-Sync Registrations 
+Sync Registrations
 ON
-* Vendor 
-Active Directory
-* Username LDAP attribute 
-cn
-* RDN LDAP attribute 
-cn
-* UUID LDAP attribute 
-objectGUID
-* User Object Classes 
-person, organizationalPerson, user
-* Connection URL 
-ldap://10.42.20.143
-* Users DN 
-cn=users,dc=ad,dc=archreactor,dc=net
-* Bind Type 
 
-Enable StartTLS 
+- Vendor
+  Active Directory
+- Username LDAP attribute
+  cn
+- RDN LDAP attribute
+  cn
+- UUID LDAP attribute
+  objectGUID
+- User Object Classes
+  person, organizationalPerson, user
+- Connection URL
+  ldap://10.42.20.143
+- Users DN
+  cn=users,dc=ad,dc=archreactor,dc=net
+- Bind Type
+
+Enable StartTLS
 OFF
-* Bind DN 
-cn=Administrator,cn=users,dc=ad,dc=archreactor,dc=net
-* Bind Credential 
-**********
-Custom User LDAP Filter 
+
+- Bind DN
+  cn=Administrator,cn=users,dc=ad,dc=archreactor,dc=net
+- Bind Credential
+
+---
+
+Custom User LDAP Filter
 (samaccounttype=805306368)
-Search Scope 
+Search Scope
 
-Validate Password Policy 
+Validate Password Policy
 OFF
-Trust Email 
+Trust Email
 ON
-Use Truststore SPI 
+Use Truststore SPI
 
-Connection Pooling 
+Connection Pooling
 ON
-Connection Timeout 
+Connection Timeout
 10000
-Read Timeout 
+Read Timeout
 30000
-Pagination 
+Pagination
 ON
- Kerberos Integration
-Allow Kerberos authentication 
+Kerberos Integration
+Allow Kerberos authentication
 OFF
-Use Kerberos For Password Authentication 
+Use Kerberos For Password Authentication
 OFF
- Sync Settings
-Batch Size 
+Sync Settings
+Batch Size
 1000
-Periodic Full Sync 
+Periodic Full Sync
 ONOFF
-Full Sync Period 
+Full Sync Period
 86400
-Periodic Changed Users Sync 
+Periodic Changed Users Sync
 ONOFF
-Changed Users Sync Period 
+Changed Users Sync Period
 18000
 Cache Settings
-Cache Policy 
+Cache Policy

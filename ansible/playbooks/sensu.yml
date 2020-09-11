@@ -163,6 +163,7 @@
         - { url: 'jenkins.archreactor.net', extra_args: '-u /login' }
         - { url: 'tools.archreactor.net', extra_args: '-u /login' }
         - { url: 'nodered.archreactor.net', extra_args: '' }
+        - { url: 'dashboard.archreactor.net', extra_args: '' }
         - { url: 'api.archreactor.net', extra_args: '' }
         - { url: 'users.archreactor.net', extra_args: '-u /auth' }
         - { url: 'sensu.archreactor.org', extra_args: '-p 3000' }
