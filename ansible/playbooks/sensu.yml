@@ -76,62 +76,17 @@
         name: sensu/sensu-ruby-runtime
         version: 0.0.10
 
-    - name: Add disk check
-      sensu.sensu_go.check:
-        auth: '{{ SENSU_AUTH }}'
-        name: disk_check
-        command: "check-disk-usage.rb -p '(\\/var|\\/run|\\/sys|\\/snap)'"
-        subscriptions:
-          - checks
-        interval: 86400
-        runtime_assets:
-          - sensu/sensu-ruby-runtime
-          - sensu-plugins/sensu-plugins-disk-checks
-        handlers:
-          - slack
-        publish: yes
-
     - name: Install load check asset
       sensu.sensu_go.bonsai_asset:
         auth: '{{ SENSU_AUTH }}'
         name: sensu-plugins/sensu-plugins-load-checks
         version: 5.1.0
 
-    - name: Add load check
-      sensu.sensu_go.check:
-        auth: '{{ SENSU_AUTH }}'
-        name: load_check
-        command: 'check-load.rb'
-        subscriptions:
-          - checks
-        interval: 1200
-        runtime_assets:
-          - sensu/sensu-ruby-runtime
-          - sensu-plugins/sensu-plugins-load-checks
-        handlers:
-          - slack
-        publish: yes
-
     - name: Install memory check asset
       sensu.sensu_go.bonsai_asset:
         auth: '{{ SENSU_AUTH }}'
         name: sensu-plugins/sensu-plugins-memory-checks
         version: 4.1.1
-
-    - name: Add memory check
-      sensu.sensu_go.check:
-        auth: '{{ SENSU_AUTH }}'
-        name: memory_check
-        command: 'check-memory-percent.rb'
-        subscriptions:
-          - checks
-        interval: 1200
-        runtime_assets:
-          - sensu/sensu-ruby-runtime
-          - sensu-plugins/sensu-plugins-memory-checks
-        handlers:
-          - slack
-        publish: yes
 
     - name: Install https://monitoring-plugins.org assets
       sensu.sensu_go.bonsai_asset:
@@ -144,46 +99,6 @@
         auth: '{{ SENSU_AUTH }}'
         name: sensu-plugins/sensu-plugins-http
         version: 6.0.0
-
-    - name: Add Http service checks
-      sensu.sensu_go.check:
-        auth: '{{ SENSU_AUTH }}'
-        name: '{{ item.url }}'
-        command: 'check_http -H {{ item.url }} {{ item.extra_args }}'
-        subscriptions:
-          - checks
-        interval: 300
-        runtime_assets:
-          - sensu/monitoring-plugins
-        handlers:
-          - slack
-        publish: yes
-      with_items:
-        - { url: 'archreactor.org', extra_args: '-p 88' }
-        - { url: 'jenkins.archreactor.net', extra_args: '-u /login' }
-        - { url: 'tools.archreactor.net', extra_args: '-u /login' }
-        - { url: 'nodered.archreactor.net', extra_args: '' }
-        - { url: 'dashboard.archreactor.net', extra_args: '' }
-        - { url: 'api.archreactor.net', extra_args: '' }
-        - { url: 'users.archreactor.net', extra_args: '-u /auth' }
-        - { url: 'sensu.archreactor.org', extra_args: '-p 3000' }
-        - { url: 'jenkins.archreactor.org', extra_args: '-p 8088 -u /login' }
-        - { url: 'moodle.archreactor.net', extra_args: '' }
-
-    - name: Add check for Keycloak https
-      sensu.sensu_go.check:
-        auth: '{{ SENSU_AUTH }}'
-        name: keycloak_https
-        command: 'check-https-cert.rb -u https://users.archreactor.net/auth'
-        subscriptions:
-          - checks
-        interval: 120
-        runtime_assets:
-          - sensu-plugins/sensu-plugins-http
-          - sensu/sensu-ruby-runtime
-        handlers:
-          - slack
-        publish: yes
 
 - hosts: sensu_agent
 

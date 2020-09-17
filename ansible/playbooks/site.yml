@@ -1,10 +1,11 @@
 ---
-
 - include: users.yml
 
 - include: docker.yml
 
 - include: sensu.yml
+
+- include: sensu_checks.yml
 
 - include: webserver.yml
 
