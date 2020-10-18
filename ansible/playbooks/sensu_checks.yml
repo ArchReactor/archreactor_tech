@@ -1,0 +1,94 @@
+---
+- hosts: sensu_backend
+
+  vars_files:
+    - '{{ VAULT_FOLDER }}/secrets.yml'
+
+  tasks:
+    - name: Add load check
+      sensu.sensu_go.check:
+        auth: '{{ SENSU_AUTH }}'
+        name: load_check
+        command: 'check-load.rb'
+        subscriptions:
+          - checks
+        interval: 1200
+        runtime_assets:
+          - sensu/sensu-ruby-runtime
+          - sensu-plugins/sensu-plugins-load-checks
+        handlers:
+          - slack
+        publish: yes
+
+    - name: Add memory check
+      sensu.sensu_go.check:
+        auth: '{{ SENSU_AUTH }}'
+        name: memory_check
+        command: 'check-memory-percent.rb'
+        subscriptions:
+          - checks
+        interval: 1200
+        runtime_assets:
+          - sensu/sensu-ruby-runtime
+          - sensu-plugins/sensu-plugins-memory-checks
+        handlers:
+          - slack
+        publish: yes
+
+    - name: Add Http service checks
+      sensu.sensu_go.check:
+        auth: '{{ SENSU_AUTH }}'
+        name: '{{ item.url }}'
+        command: 'check_http -H {{ item.url }} {{ item.extra_args }}'
+        subscriptions:
+          - checks
+        interval: 300
+        runtime_assets:
+          - sensu/monitoring-plugins
+        handlers:
+          - slack
+        publish: yes
+      with_items:
+        - { url: 'archreactor.org', extra_args: '-p 88' }
+        - { url: 'jenkins.archreactor.net', extra_args: '-u /login' }
+        - { url: 'tools.archreactor.net', extra_args: '-u /login' }
+        - { url: 'nodered.archreactor.net', extra_args: '' }
+        - { url: 'dashboard.archreactor.net', extra_args: '' }
+        - { url: 'api.archreactor.net', extra_args: '' }
+        - { url: 'users.archreactor.net', extra_args: '-u /auth' }
+        - { url: 'sensu.archreactor.org', extra_args: '-p 3000' }
+        - { url: 'jenkins.archreactor.org', extra_args: '-p 8088 -u /login' }
+        - { url: 'moodle.archreactor.net', extra_args: '' }
+
+    - name: Add check for Keycloak https
+      sensu.sensu_go.check:
+        auth: '{{ SENSU_AUTH }}'
+        name: keycloak_https
+        command: 'check-https-cert.rb -u https://users.archreactor.net/auth'
+        subscriptions:
+          - checks
+        interval: 1200
+        runtime_assets:
+          - sensu-plugins/sensu-plugins-http
+          - sensu/sensu-ruby-runtime
+        handlers:
+          - slack
+        publish: yes
+
+    - name: Check lockout statuses
+      sensu.sensu_go.check:
+        auth: '{{ SENSU_AUTH }}'
+        name: 'lockout_{{ item.url }}'
+        command: 'check-http-json.rb -u {{ item.url }} --key error --value ""'
+        subscriptions:
+          - entity:ar-dell-linux
+        interval: 1200
+        runtime_assets:
+          - sensu-plugins/sensu-plugins-http
+          - sensu/sensu-ruby-runtime
+        handlers:
+          - slack
+        publish: yes
+      with_items:
+        - { url: '10.42.30.114' }
+        - { url: '10.42.30.83' }
