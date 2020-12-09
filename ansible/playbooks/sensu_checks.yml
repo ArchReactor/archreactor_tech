@@ -75,6 +75,21 @@
           - slack
         publish: yes
 
+    - name: Add check for NVR (Cameras) https
+      sensu.sensu_go.check:
+        auth: '{{ SENSU_AUTH }}'
+        name: nvr_https
+        command: 'check-https-cert.rb -u https://nvr-p.archreactor.net'
+        subscriptions:
+          - checks
+        interval: 1200
+        runtime_assets:
+          - sensu-plugins/sensu-plugins-http
+          - sensu/sensu-ruby-runtime
+        handlers:
+          - slack
+        publish: yes
+
     - name: Check lockout statuses
       sensu.sensu_go.check:
         auth: '{{ SENSU_AUTH }}'

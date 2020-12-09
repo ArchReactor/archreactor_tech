@@ -70,6 +70,15 @@
         letsencrypt: true
         letsencrypt_email: 'admin@archreactor.org'
 
+      nvr-p.archreactor.net:
+        domains:
+          - nvr-p.archreactor.net
+        upstreams:
+          - { backend_address: 10.42.20.50, backend_port: 443 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
   roles:
     - role: nginx-revproxy
       become: yes
