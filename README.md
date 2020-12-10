@@ -71,6 +71,10 @@ https://github.com/ArchReactor/archreactor_api
 
 API server acts as middleware for other APIs like CivicCRM and Snipe-IT
 
+# Firewall / DHCP / DNS
+
+These settings are handled by a pfSense server at 10.42.40.1
+
 # Testing
 
 Test are located in /tests folder. Vagrant is used to launch virtual Ubuntu servers and a workstation using Virtual Box. See [tests/README.md](tests/README.md) for more details.
