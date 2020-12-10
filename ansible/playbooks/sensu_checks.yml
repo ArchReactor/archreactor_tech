@@ -60,11 +60,11 @@
         - { url: 'jenkins.archreactor.org', extra_args: '-p 8088 -u /login' }
         - { url: 'moodle.archreactor.net', extra_args: '' }
 
-    - name: Add check for Keycloak https
+    - name: Add check for https ssl cert
       sensu.sensu_go.check:
         auth: '{{ SENSU_AUTH }}'
-        name: keycloak_https
-        command: 'check-https-cert.rb -u https://users.archreactor.net/auth'
+        name: '{{ item.url }}_https'
+        command: 'check-https-cert.rb -w 25 -c 7 -u https://{{ item.url }}{{ item.path }}'
         subscriptions:
           - checks
         interval: 1200
@@ -74,27 +74,15 @@
         handlers:
           - slack
         publish: yes
-
-    - name: Add check for NVR (Cameras) https
-      sensu.sensu_go.check:
-        auth: '{{ SENSU_AUTH }}'
-        name: nvr_https
-        command: 'check-https-cert.rb -u https://nvr-p.archreactor.net'
-        subscriptions:
-          - checks
-        interval: 1200
-        runtime_assets:
-          - sensu-plugins/sensu-plugins-http
-          - sensu/sensu-ruby-runtime
-        handlers:
-          - slack
-        publish: yes
+      with_items:
+        - { url: 'users.archreactor.net', path: '/auth'}
+        - { url: 'nvr-p.archreactor.net', path: ''}
 
     - name: Check lockout statuses
       sensu.sensu_go.check:
         auth: '{{ SENSU_AUTH }}'
         name: 'lockout_{{ item.url }}'
-        command: 'check-http-json.rb -u {{ item.url }} --key error --value ""'
+        command: 'check-http-json.rb -u http://{{ item.url }}/ --key error --value ""'
         subscriptions:
           - entity:ar-dell-linux
         interval: 1200
@@ -107,3 +95,4 @@
       with_items:
         - { url: '10.42.30.114' }
         - { url: '10.42.30.83' }
+        - { url: '10.42.30.148' }
