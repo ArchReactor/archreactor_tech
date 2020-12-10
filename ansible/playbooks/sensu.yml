@@ -28,7 +28,11 @@
           - name: 'sensu'
         volumes:
           - 'sensu-backend-data:/var/lib/sensu'
-        command: 'sensu-backend start --log-level debug'
+        log_driver: json-file
+        log_options:
+          max-size: 10m
+          max-file: 3
+        command: 'sensu-backend start'
         restart_policy: 'always'
 
     - name: Wait for sensu to start
