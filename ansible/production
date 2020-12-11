@@ -6,7 +6,7 @@ VAULT_FOLDER="../vault"
 ##
 [docker_host]
 archreactor.org
-archreactor.net
+users.archreactor.net
 
 ##
 # For system monitoring
@@ -17,7 +17,7 @@ archreactor.org
 
 [sensu_agent]
 archreactor.org
-archreactor.net
+users.archreactor.net
 
 [web_server]
 archreactor.org
@@ -27,7 +27,7 @@ archreactor.org
 # http://tools.archreactor.org
 ##
 [snipe_it_server]
-archreactor.net
+users.archreactor.net
 
 ##
 # Handles cron style jobs and backups
@@ -36,7 +36,7 @@ archreactor.net
 ##
 [jenkins_server]
 archreactor.org
-archreactor.net
+users.archreactor.net
 
 ##
 # Rsync server running on port 22022
@@ -44,44 +44,44 @@ archreactor.net
 ##
 [rsync_server]
 archreactor.org
-archreactor.net
+users.archreactor.net
 
 [ldap_server]
-archreactor.net
+users.archreactor.net
 
 ###
 # Samba Primary Domain Controller
 ###
 [pdc]
-archreactor.net
+users.archreactor.net
 
 ###
 # Keycloak server
 # users.archreactor.org
 ###
 [keycloak_server]
-archreactor.net
+users.archreactor.net
 
 ##
 # Secure web server
 # Just installs Certbot
 ##
 [ssl]
-archreactor.net
+users.archreactor.net
 
 ##
 # http://api.archreactor.net
 # API server acts as middle ware for other APIs like CivicCRM and Snipe-IT
 ##
 [archreactor_api_server]
-archreactor.net
+users.archreactor.net
 
 ##
 # http://moodle.archreactor.net
 # Online classes
 ##
 [moodle]
-archreactor.net
+users.archreactor.net
 
 [proxy]
-archreactor.net
+users.archreactor.net
