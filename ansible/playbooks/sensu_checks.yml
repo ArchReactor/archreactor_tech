@@ -76,7 +76,6 @@
         publish: yes
       with_items:
         - { name: 'elastic_search_9200', url: '127.0.0.1', extra_args: '-p 9200' }
-        - { name: 'elastic_search_9300', url: '127.0.0.1', extra_args: '-p 9300' }
         - { name: 'kibana_5601', url: '127.0.0.1', extra_args: '-p 5601' }
 
     - name: Add check for https ssl cert
