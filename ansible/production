@@ -6,7 +6,7 @@ VAULT_FOLDER="../vault"
 ##
 [docker_host]
 archreactor.org
-archreactor.net
+users.archreactor.net
 
 ##
 # For system monitoring
@@ -17,26 +17,26 @@ archreactor.org
 
 [sensu_agent]
 archreactor.org
-archreactor.net
+users.archreactor.net
 
 [web_server]
 archreactor.org
 
 ##
 # Physical tool and Asset management
-# http://tools.archreactor.org
+# https://tools.archreactor.org
 ##
 [snipe_it_server]
-archreactor.net
+users.archreactor.net
 
 ##
 # Handles cron style jobs and backups
 # http://archreactor.org:8080
-# http://jenkins.archreactor.net
+# https://jenkins.archreactor.net
 ##
 [jenkins_server]
 archreactor.org
-archreactor.net
+users.archreactor.net
 
 ##
 # Rsync server running on port 22022
@@ -44,44 +44,54 @@ archreactor.net
 ##
 [rsync_server]
 archreactor.org
-archreactor.net
+users.archreactor.net
 
 [ldap_server]
-archreactor.net
+users.archreactor.net
 
 ###
 # Samba Primary Domain Controller
 ###
 [pdc]
-archreactor.net
+users.archreactor.net
 
 ###
 # Keycloak server
-# users.archreactor.org
+# https://users.archreactor.org
 ###
 [keycloak_server]
-archreactor.net
+users.archreactor.net
 
 ##
 # Secure web server
 # Just installs Certbot
 ##
 [ssl]
-archreactor.net
+users.archreactor.net
 
 ##
-# http://api.archreactor.net
+# https://api.archreactor.net
 # API server acts as middle ware for other APIs like CivicCRM and Snipe-IT
 ##
 [archreactor_api_server]
-archreactor.net
+users.archreactor.net
 
 ##
-# http://moodle.archreactor.net
+# https://moodle.archreactor.net
 # Online classes
 ##
 [moodle]
-archreactor.net
+users.archreactor.net
 
+##
+# Nginx server that forwards trafic on port 80 and 443 to internal services
+##
 [proxy]
-archreactor.net
+users.archreactor.net
+
+##
+# https://kibana.archreactor.net
+# Database for IOT devices
+##
+[elastic_search]
+users.archreactor.net

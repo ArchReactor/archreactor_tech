@@ -1,0 +1,33 @@
+---
+
+- hosts: elastic_search
+
+  tasks:
+
+  - name: Create volume for Elastic search Database
+    docker_volume:
+      name: elastic_search
+
+  - name: Install Elastic Search Database
+    docker_container:
+      name: elastic_search
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+      env:
+        discovery.type: "single-node"
+      ports:
+        - "9200:9200"
+        - "9300:9300"
+      volumes:
+        - "elastic_search:/usr/share/elasticsearch/data"
+
+  - name: Install kibana
+    docker_container:
+      name: kibana
+      image: docker.elastic.co/kibana/kibana:7.10.1
+      env:
+        SERVER_NAME: "kibana.archreactor.net"
+        ELASTICSEARCH_HOSTS: "http://elastic_search:9200"
+      etc_hosts:
+        elastic_search: '{{ ansible_default_ipv4.address }}'
+      ports:
+        - "5601:5601"
