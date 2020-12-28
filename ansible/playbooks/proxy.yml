@@ -79,6 +79,15 @@
         letsencrypt: true
         letsencrypt_email: 'admin@archreactor.org'
 
+      kibana.archreactor.net:
+        domains:
+          - kibana.archreactor.net
+        upstreams:
+          - { backend_address: 127.0.0.1, backend_port: 5601 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
   roles:
     - role: nginx-revproxy
       become: yes

@@ -24,3 +24,5 @@
 - include: archreactor_api.yml
 
 - include: nodered.yml
+
+- include: elastic_search.yml
