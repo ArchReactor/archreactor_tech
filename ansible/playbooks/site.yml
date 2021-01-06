@@ -26,3 +26,7 @@
 - include: nodered.yml
 
 - include: elastic_search.yml
+
+- include: grafana.yml
+
+- include: proxy.yml
