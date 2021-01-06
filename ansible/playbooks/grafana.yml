@@ -1,0 +1,24 @@
+---
+
+- hosts: grafana
+
+  tasks:
+
+  - name: Create volume for Elastic search Database
+    docker_volume:
+      name: grafana
+
+  - name: Install Elastic Search Database
+    docker_container:
+      name: grafana
+      image: grafana/grafana
+      env:
+        GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
+      ports:
+        - "3017:3000"
+      etc_hosts:
+        api.archreactor.net: '{{ ansible_default_ipv4.address }}'
+        users.archreactor.net: '{{ ansible_default_ipv4.address }}'
+        tools.archreactor.net: '{{ ansible_default_ipv4.address }}'
+      volumes:
+        - "grafana:/var/lib/grafana"

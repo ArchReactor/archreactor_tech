@@ -95,3 +95,10 @@ users.archreactor.net
 ##
 [elastic_search]
 users.archreactor.net
+
+##
+# https://grafana.archreactor.net
+# Dashboards and Graphs for IOT
+##
+[grafana]
+users.archreactor.net

@@ -88,6 +88,15 @@
         letsencrypt: true
         letsencrypt_email: 'admin@archreactor.org'
 
+      grafana.archreactor.net:
+        domains:
+          - grafana.archreactor.net
+        upstreams:
+          - { backend_address: 127.0.0.1, backend_port: 3017 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
   roles:
     - role: nginx-revproxy
       become: yes
