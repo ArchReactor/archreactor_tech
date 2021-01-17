@@ -61,6 +61,7 @@
         - { url: 'moodle.archreactor.net', extra_args: '' }
         - { url: 'kibana.archreactor.net', extra_args: '' }
         - { url: 'grafana.archreactor.net', extra_args: '' }
+        - { url: 'unifi.archreactor.net', extra_args: ''}
 
     - name: Add Internal Http service checks
       sensu.sensu_go.check:

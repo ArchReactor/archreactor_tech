@@ -102,3 +102,10 @@ users.archreactor.net
 ##
 [grafana]
 users.archreactor.net
+
+##
+# https://unifi.archreactor.net
+# Unifi Access Point Controller
+##
+[unifi]
+users.archreactor.net

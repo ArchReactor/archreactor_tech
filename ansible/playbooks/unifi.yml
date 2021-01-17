@@ -1,0 +1,21 @@
+---
+
+- hosts: unifi
+
+  tasks:
+
+  - name: Create volume for Unifi Controller
+    docker_volume:
+      name: unifi
+
+  - name: Install Unifi Controller
+    docker_container:
+      name: unifi
+      image: linuxserver/unifi-controller
+      ports:
+      - "3478:3478/udp"
+      - "10001:10001/udp"
+      - "8112:8080"
+      - "8113:8443"
+      volumes:
+        - "unifi:/config"
