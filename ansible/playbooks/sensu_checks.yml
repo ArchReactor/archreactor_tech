@@ -61,7 +61,7 @@
         - { url: 'moodle.archreactor.net', extra_args: '' }
         - { url: 'kibana.archreactor.net', extra_args: '' }
         - { url: 'grafana.archreactor.net', extra_args: '' }
-        - { url: 'unifi.archreactor.net', extra_args: ''}
+        - { url: 'unifi.archreactor.net', extra_args: '' }
 
     - name: Add Internal Http service checks
       sensu.sensu_go.check:
@@ -117,6 +117,7 @@
           - slack
         publish: yes
       with_items:
-        - { name: 'mig_welder', url: '10.42.30.114' }
-        - { name: 'wood_bench', url: '10.42.30.239' }
-        - { name: 'back_door', url: '10.42.30.148' }
+        - { name: 'mig_welder', url: '10.42.10.109' }
+        - { name: 'wood_bench', url: '10.42.20.140' }
+        - { name: 'back_door', url: '10.42.10.109' }
+        - { name: 'front_door', url: '10.42.10.111' }
