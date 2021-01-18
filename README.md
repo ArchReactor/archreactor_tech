@@ -51,6 +51,13 @@ Keyclock settings can be found at [docs/KEYCLOAK.md](docs/KEYCLOAK.md)
 
 Create a new user at [https://users.archreactor.net/auth/realms/archreactor/account/](https://users.archreactor.net/auth/realms/archreactor/account/)
 
+# Wireless
+
+https://unifi.archreactor.net
+
+Wifi is managed by a Unifi controller.
+https://hub.docker.com/r/linuxserver/unifi-controller
+
 # Jenkins and Backups
 
 http://jenkins.archreactor.net
