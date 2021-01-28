@@ -97,6 +97,15 @@
         letsencrypt: true
         letsencrypt_email: 'admin@archreactor.org'
 
+      unifi.archreactor.net:
+        domains:
+          - unifi.archreactor.net
+        upstreams:
+          - { backend_address: 127.0.0.1, backend_port: 8113 }
+        ssl: true
+        letsencrypt: true
+        letsencrypt_email: 'admin@archreactor.org'
+
   roles:
     - role: nginx-revproxy
       become: yes

@@ -61,6 +61,7 @@
         - { url: 'moodle.archreactor.net', extra_args: '' }
         - { url: 'kibana.archreactor.net', extra_args: '' }
         - { url: 'grafana.archreactor.net', extra_args: '' }
+        - { url: 'unifi.archreactor.net', extra_args: '' }
 
     - name: Add Internal Http service checks
       sensu.sensu_go.check:
@@ -76,7 +77,11 @@
           - slack
         publish: yes
       with_items:
-        - { name: 'elastic_search_9200', url: '127.0.0.1', extra_args: '-p 9200' }
+        - {
+            name: 'elastic_search_9200',
+            url: '127.0.0.1',
+            extra_args: '-p 9200',
+          }
         - { name: 'kibana_5601', url: '127.0.0.1', extra_args: '-p 5601' }
 
     - name: Add check for https ssl cert
@@ -94,8 +99,8 @@
           - slack
         publish: yes
       with_items:
-        - { url: 'users.archreactor.net', path: '/auth'}
-        - { url: 'nvr-p.archreactor.net', path: ''}
+        - { url: 'users.archreactor.net', path: '/auth' }
+        - { url: 'nvr-p.archreactor.net', path: '' }
 
     - name: Check lockout statuses
       sensu.sensu_go.check:
@@ -112,6 +117,7 @@
           - slack
         publish: yes
       with_items:
-        - { name: 'mig_welder', url: '10.42.30.114' }
-        - { name: 'wood_bench', url: '10.42.30.83' }
-        - { name: 'back_door', url: '10.42.30.148' }
+        - { name: 'mig_welder', url: '10.42.10.109' }
+        - { name: 'wood_bench', url: '10.42.20.140' }
+        - { name: 'back_door', url: '10.42.10.109' }
+        - { name: 'front_door', url: '10.42.10.111' }
