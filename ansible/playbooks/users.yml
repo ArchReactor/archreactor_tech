@@ -10,6 +10,8 @@
       - username: chrisw
         pubkey: "https://github.com/chrwei.keys"
       - username: vagrant
+      - username: rtward
+        pubkey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC89TvodYJkwui0xQ9AxYiAc68nNDbPlTVMJjDOJI1ZKvynh2JB04fM2b4xAglzeU8LcfOFEprjBH3rAzjYnEcutorBCIxDaQ0pLkRidNOrf1TDBCK+REuT724XkiZLGZsbo+M7XjthXCQ2tYBP4hII6W3nqX4XQdGOIJ/Ic/j1WsJNwEfa8vZpodHo+ag3WD0q3SMHVV4LMDOSHMIQKEArrp86a/3XKM7dpkZB1Wl1sD6yqR+ZVp5ldnQcez7mYq0IVNEwwGFMlVyjLsIDf2xzrIrWlrgqzfgBRqB7Re1r3NMOmjUylG1rq3tNMcnkfQs3IUVBus6pPM4AY04OkeAp rtward@minerva"
 
   roles:
     - role: ansible-role-admin-users
