@@ -4,11 +4,11 @@
 
   tasks:
 
-  - name: Create volume for Elastic search Database
+  - name: Create volume for Grafana
     docker_volume:
       name: grafana
 
-  - name: Install Elastic Search Database
+  - name: Install Grafana
     docker_container:
       name: grafana
       image: grafana/grafana
