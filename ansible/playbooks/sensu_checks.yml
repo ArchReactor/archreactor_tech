@@ -105,7 +105,7 @@
     - name: Check lockout statuses
       sensu.sensu_go.check:
         auth: '{{ SENSU_AUTH }}'
-        name: '{{ item.name }}_{{ item.url }}'
+        name: 'lockout-{{ item.name }}_{{ item.url }}'
         command: 'check-http-json.rb -u http://{{ item.url }}/ --key error --value ""'
         subscriptions:
           - entity:ar-dell-linux
@@ -117,7 +117,8 @@
           - slack
         publish: yes
       with_items:
-        - { name: 'mig_welder', url: '10.42.10.109' }
+        - { name: 'mig_welder', url: '10.42.10.110' }
         - { name: 'wood_bench', url: '10.42.20.140' }
         - { name: 'back_door', url: '10.42.10.109' }
         - { name: 'front_door', url: '10.42.10.111' }
+        - { name: 'wood_tools', url: '10.42.20.147' }
